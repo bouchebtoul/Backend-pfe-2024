@@ -6,6 +6,7 @@ const RoleSchema = new mongoose.Schema({
     required: true,
     unique: true, // Ensure no duplicate roles
   },
+  permissions: [{ type: String }]
 });
 
 module.exports = mongoose.model("Role", RoleSchema);

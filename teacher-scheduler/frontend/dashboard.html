@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Scheduler - Dashboard</title>
     <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/academic.css">
     <link rel="stylesheet" href="css/teachers.css">
     <link rel="stylesheet" href="css/rooms.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -33,10 +34,24 @@
         </div>
         <ul class="sidebar-menu">
             <li>
-                <a href="#teachers">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    Teachers Management
+                <a href="#resources">
+                    <i class="fas fa-cube"></i>
+                    Resources
                 </a>
+                <ul class="submenu">
+                    <li>
+                        <a href="#teachers">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            Teachers
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#rooms">
+                            <i class="fas fa-door-open"></i>
+                            Rooms
+                        </a>
+                    </li>
+                </ul>
             </li>
             <li>
                 <a href="#academic">
@@ -62,19 +77,12 @@
                             Levels
                         </a>
                     </li>
-                    
                 </ul>
             </li>
             <li>
                 <a href="#modules">
                     <i class="fas fa-book"></i>
                     Modules/Courses
-                </a>
-            </li>
-            <li>
-                <a href="#rooms">
-                    <i class="fas fa-door-open"></i>
-                    Rooms
                 </a>
             </li>
             <li>
@@ -93,6 +101,12 @@
                 <a href="#academic-year">
                     <i class="fas fa-calendar"></i>
                     Academic Year
+                </a>
+            </li>
+            <li class="admin-only">
+                <a href="#roles">
+                    <i class="fas fa-user-shield"></i>
+                    Roles Management
                 </a>
             </li>
         </ul>

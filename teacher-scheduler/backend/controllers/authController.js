@@ -37,7 +37,7 @@ const registerUser = async (req, res) => {
 
     // Ensure the request is from an Admin
     const adminUser = await User.findById(req.user.id).populate("role");
-    if (!adminUser || adminUser.role.name !== "admin") {
+    if (!adminUser || adminUser.role.name !== "ADMIN") {
       return res.status(403).json({ message: "Forbidden: Only Admin can create users" });
     }
 
@@ -115,5 +115,29 @@ const refreshToken = async (req, res) => {
   });
 };
 
+// ✅ Get Current User
+const getCurrentUser = async (req, res) => {
+  try {
+    // User is already attached to req by authMiddleware
+    const user = await User.findById(req.user._id)
+      .select('-password')  // Exclude password
+      .populate('role');    // Include role details
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json({
+      _id: user._id,
+      email: user.email,
+      fullname: user.fullname,
+      role: user.role.name,
+      permissions: user.role.permissions
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 // ✅ Export Functions
-module.exports = { registerUser, loginUser, refreshToken };
+module.exports = { registerUser, loginUser, refreshToken, getCurrentUser };

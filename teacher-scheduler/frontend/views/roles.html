@@ -1,0 +1,149 @@
+<div class="roles-section">
+    <div class="section-header">
+        <h2>Roles Management</h2>
+        <button id="addRoleBtn" class="add-button">
+            <i class="fas fa-plus"></i> Add Role
+        </button>
+    </div>
+    
+    <table class="roles-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Permissions</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="rolesTableBody">
+            <!-- Roles will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Role Modal -->
+<div id="roleModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="roleModalTitle" class="modal-title">Add New Role</h2>
+        
+        <form id="roleForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter role name">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3"
+                          placeholder="Enter role description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Permissions</label>
+                <div class="permissions-grid">
+                    <!-- Teachers Management -->
+                    <div class="permission-group">
+                        <h4>Teachers Management</h4>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="view_teachers">
+                            View Teachers
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_teachers">
+                            Manage Teachers
+                        </label>
+                    </div>
+
+                    <!-- Academic Structure -->
+                    <div class="permission-group">
+                        <h4>Academic Structure</h4>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="view_departments">
+                            View Departments
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_departments">
+                            Manage Departments
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="view_specialities">
+                            View Specialities
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_specialities">
+                            Manage Specialities
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="view_levels">
+                            View Levels
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_levels">
+                            Manage Levels
+                        </label>
+                    </div>
+
+                    <!-- Modules Management -->
+                    <div class="permission-group">
+                        <h4>Modules Management</h4>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="view_modules">
+                            View Modules
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_modules">
+                            Manage Modules
+                        </label>
+                    </div>
+
+                    <!-- Rooms Management -->
+                    <div class="permission-group">
+                        <h4>Rooms Management</h4>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="view_rooms">
+                            View Rooms
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_rooms">
+                            Manage Rooms
+                        </label>
+                    </div>
+
+                    <!-- Schedule Management -->
+                    <div class="permission-group">
+                        <h4>Schedule Management</h4>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="view_schedules">
+                            View Schedules
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_schedules">
+                            Manage Schedules
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_affectation">
+                            Manage Teacher Affectation
+                        </label>
+                    </div>
+
+                    <!-- System Management -->
+                    <div class="permission-group">
+                        <h4>System Management</h4>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_academic_year">
+                            Manage Academic Year
+                        </label>
+                        <label class="permission-item">
+                            <input type="checkbox" name="permissions" value="manage_semester">
+                            Manage Semester
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-button">Save Role</button>
+        </form>
+    </div>
+</div> 

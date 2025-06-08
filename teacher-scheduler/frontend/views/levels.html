@@ -6,7 +6,7 @@
         </button>
     </div>
     
-    <table class="levels-table">
+    <table class="academic-table">
         <thead>
             <tr>
                 <th>Code</th>
@@ -17,7 +17,25 @@
             </tr>
         </thead>
         <tbody id="levelsTableBody">
-            <!-- Levels will be loaded here -->
+            <!-- Template for level row -->
+            <template id="levelRowTemplate">
+                <tr>
+                    <td data-field="code"></td>
+                    <td data-field="name"></td>
+                    <td data-field="speciality"></td>
+                    <td data-field="description"></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </template>
         </tbody>
     </table>
 </div>

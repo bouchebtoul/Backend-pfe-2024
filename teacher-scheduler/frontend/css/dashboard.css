@@ -115,6 +115,7 @@ body {
     display: none;
     margin: 0;
     padding: 0;
+    transition: all 0.3s ease;
 }
 
 .sidebar-menu .submenu.show {
@@ -148,9 +149,24 @@ body {
 /* Update parent menu item styles */
 .sidebar-menu li > a {
     position: relative;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.sidebar-menu li > a[href="#academic"]::after {
+.sidebar-menu li > a:hover {
+    background-color: #34495e;
+}
+
+.sidebar-menu li > a.active {
+    background-color: #34495e;
+}
+
+.sidebar-menu li > a[href="#academic"]::after,
+.sidebar-menu li > a[href="#resources"]::after {
     content: '\f107';
     font-family: 'Font Awesome 6 Free';
     font-weight: 900;
@@ -159,7 +175,8 @@ body {
     transition: transform 0.3s ease;
 }
 
-.sidebar-menu li > a[href="#academic"].active::after {
+.sidebar-menu li > a[href="#academic"].active::after,
+.sidebar-menu li > a[href="#resources"].active::after {
     transform: rotate(180deg);
 }
 
@@ -212,4 +229,39 @@ body {
     color: #2c3e50;
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+/* Error Messages */
+.error-message {
+    text-align: center;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px;
+}
+
+.error-message i {
+    font-size: 48px;
+    color: #dc3545;
+    margin-bottom: 20px;
+}
+
+.error-message h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.error-message p {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Admin Only Elements */
+.admin-only {
+    display: none;
+}
+
+body.is-admin .admin-only {
+    display: block;
 } 

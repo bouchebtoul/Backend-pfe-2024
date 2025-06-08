@@ -5,389 +5,318 @@ import DepartmentsManager from './managers/DepartmentsManager.js';
 import LevelsManager from './managers/LevelsManager.js';
 import ModulesManager from './managers/ModulesManager.js';
 import config from './config.js';
+import TeachersManager from './managers/TeachersManager.js';
+import RoomsManager from './managers/RoomsManager.js';
+import RolesManager from './managers/RolesManager.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if user is authenticated
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = 'index.html';
-        return;
+class Dashboard {
+    constructor() {
+        this.mainContent = document.querySelector('.main-content');
+        this.contentBody = document.querySelector('.content-body');
+        this.logoutBtn = document.getElementById('logoutBtn');
+        this.currentUser = null;
+        
+        this.initializeEventListeners();
+        this.checkAuthentication();
     }
 
-    // Initialize UI elements
-    const logoutBtn = document.getElementById('logoutBtn');
-    const profileLink = document.getElementById('profileLink');
-    const mainContent = document.querySelector('.main-content .content-body');
+    initializeEventListeners() {
+        // Handle main menu items
+        document.querySelectorAll('.sidebar-menu > li > a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const href = e.currentTarget.getAttribute('href');
+                
+                // Special handling for submenus
+                if (href === '#academic' || href === '#resources') {
+                    // Toggle submenu visibility
+                    const submenu = e.currentTarget.parentElement.querySelector('.submenu');
+                    if (submenu) {
+                        submenu.classList.toggle('show');
+                        e.currentTarget.classList.toggle('active');
+                    }
+                } else {
+                    // Load other sections directly
+                    const section = href.substring(1);
+                    this.loadSection(section);
+                }
+            });
+        });
 
-    // Handle logout
-    logoutBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        localStorage.removeItem('token');
-        window.location.href = 'index.html';
-    });
+        // Handle submenu items separately
+        document.querySelectorAll('.submenu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent triggering parent menu click
+                const section = e.currentTarget.getAttribute('href').substring(1);
+                this.loadSection(section);
+            });
+        });
 
-    // Handle sidebar navigation
-    document.querySelectorAll('.sidebar-menu a').forEach(link => {
-        link.addEventListener('click', async (e) => {
+        // Logout handler
+        this.logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log('Sidebar link clicked:', e.currentTarget.getAttribute('href'));
-            
-            const section = e.currentTarget.getAttribute('href').substring(1);
-            
-            // Don't process parent menu items with submenus
-            if (e.currentTarget.parentElement.querySelector('.submenu')) {
-                // Toggle submenu visibility
-                const submenu = e.currentTarget.parentElement.querySelector('.submenu');
-                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+            this.handleLogout();
+        });
+    }
+
+    async checkAuthentication() {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = 'index.html';
                 return;
             }
-            
+
+            const response = await fetch(`${config.backendUrl}/api/auth/me`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Authentication failed');
+            }
+
+            this.currentUser = await response.json();
+            this.setupUserInterface();
+        } catch (error) {
+            console.error('Authentication error:', error);
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+    }
+
+    setupUserInterface() {
+        // Add admin class if user is admin
+        if (this.currentUser.role === 'admin') {
+            document.body.classList.add('is-admin');
+        }
+
+        // Show default section (dashboard stats)
+        this.loadSection('dashboard');
+
+        // Update UI based on user permissions
+        this.updateUIBasedOnPermissions();
+    }
+
+    updateUIBasedOnPermissions() {
+        const permissions = this.currentUser.permissions || [];
+        
+        // Hide/show menu items based on permissions
+        const menuItems = {
+            'teachers': 'manage_teachers',
+            'departments': 'manage_departments',
+            'specialities': 'manage_departments', // Part of departments management
+            'levels': 'manage_departments',       // Part of departments management
+            'modules': 'manage_modules',
+            'rooms': 'manage_schedules',         // Part of schedule management
+            'roles': 'manage_roles',
+            'semester': 'manage_semesters',
+            'academic-year': 'manage_semesters'  // Part of semester management
+        };
+
+        Object.entries(menuItems).forEach(([section, permission]) => {
+            const menuItem = document.querySelector(`a[href="#${section}"]`);
+            if (menuItem) {
+                const hasPermission = permissions.includes(permission);
+                menuItem.parentElement.style.display = hasPermission ? 'block' : 'none';
+                
+                // Also check parent menu visibility
+                const parentMenu = menuItem.closest('li').parentElement.closest('li');
+                if (parentMenu) {
+                    const siblingLinks = parentMenu.querySelectorAll('.submenu li');
+                    const allSiblingsHidden = Array.from(siblingLinks).every(li => li.style.display === 'none');
+                    parentMenu.style.display = allSiblingsHidden ? 'none' : 'block';
+                }
+            }
+        });
+    }
+
+    async loadSection(section) {
+        try {
             // Remove active class from all links
-            document.querySelectorAll('.sidebar-menu a').forEach(l => l.classList.remove('active'));
-            // Add active class to clicked link
-            e.currentTarget.classList.add('active');
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
 
-            try {
-                // Handle different sections
-                switch(section) {
-                    case 'teachers':
-                        console.log('Loading teachers section...');
-                        await loadTeachersSection();
-                        break;
-                    case 'rooms':
-                        console.log('Loading rooms section...');
-                        await loadRoomsSection();
-                        break;
-                    case 'specialities':
-                        console.log('Loading specialities section...');
-                        await loadSpecialitiesSection();
-                        break;
-                    case 'departments':
-                        console.log('Loading departments section...');
-                        await loadDepartmentsSection();
-                        break;
-                    case 'levels':
-                        console.log('Loading levels section...');
-                        await loadLevelsSection();
-                        break;
-                    case 'modules':
-                        console.log('Loading modules section...');
-                        await loadModulesSection();
-                        break;
-                    // Add other section handlers here
-                    default:
-                        mainContent.innerHTML = `<h2>${section.charAt(0).toUpperCase() + section.slice(1)}</h2>`;
-                }
-            } catch (error) {
-                console.error('Error loading section:', error);
+            // Add active class to current section link
+            const activeLink = document.querySelector(`.sidebar-menu a[href="#${section}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
             }
-        });
-    });
 
-    // Fetch dashboard statistics
-    fetchDashboardStats();
-});
-
-async function loadTeachersSection() {
-    console.log('Loading teachers section...');
-    const mainContent = document.querySelector('.main-content .content-body');
-    
-    if (!mainContent) {
-        console.error('Main content element not found');
-        return;
-    }
-
-    try {
-        // Fetch the teachers section HTML template
-        const response = await fetch('views/teachers.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const htmlContent = await response.text();
-        
-        // Load the HTML content
-        mainContent.innerHTML = htmlContent;
-        console.log('Teachers section HTML loaded');
-
-        // Load and initialize the teachers manager
-        if (!window.teachersManager) {
-            console.log('Creating new teachers manager...');
-            const script = document.createElement('script');
-            script.src = 'js/teachers.js';
-            document.body.appendChild(script);
-            
-            script.onload = () => {
-                console.log('Teachers.js loaded successfully');
-                if (window.teachersManager) {
-                    window.teachersManager.initialize();
-                } else {
-                    console.error('TeachersManager not found after script load');
-                }
-            };
-
-            script.onerror = (error) => {
-                console.error('Error loading teachers.js:', error);
-            };
-        } else {
-            console.log('Using existing teachers manager');
-            window.teachersManager.initialize();
-        }
-    } catch (error) {
-        console.error('Error loading teachers section:', error);
-        mainContent.innerHTML = `<div class="error-message">Error loading teachers section: ${error.message}</div>`;
-    }
-}
-
-async function loadRoomsSection() {
-    console.log('Loading rooms section...');
-    const mainContent = document.querySelector('.main-content .content-body');
-    
-    if (!mainContent) {
-        console.error('Main content element not found');
-        return;
-    }
-
-    try {
-        // Fetch the rooms section HTML template
-        const response = await fetch('views/rooms.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const htmlContent = await response.text();
-        
-        // Load the HTML content
-        mainContent.innerHTML = htmlContent;
-        console.log('Rooms section HTML loaded');
-
-        // Load and initialize the rooms manager
-        if (!window.roomsManager) {
-            console.log('Creating new rooms manager...');
-            const script = document.createElement('script');
-            script.src = 'js/rooms.js';
-            document.body.appendChild(script);
-            
-            script.onload = () => {
-                console.log('Rooms.js loaded successfully');
-                if (window.roomsManager) {
-                    window.roomsManager.initialize();
-                } else {
-                    console.error('RoomsManager not found after script load');
-                }
-            };
-
-            script.onerror = (error) => {
-                console.error('Error loading rooms.js:', error);
-            };
-        } else {
-            console.log('Using existing rooms manager');
-            window.roomsManager.initialize();
-        }
-    } catch (error) {
-        console.error('Error loading rooms section:', error);
-        mainContent.innerHTML = `<div class="error-message">Error loading rooms section: ${error.message}</div>`;
-    }
-}
-
-async function loadSpecialitiesSection() {
-    console.log('Loading specialities section...');
-    const mainContent = document.querySelector('.main-content .content-body');
-    
-    if (!mainContent) {
-        console.error('Main content element not found');
-        return;
-    }
-
-    try {
-        // Fetch the specialities section HTML template
-        const response = await fetch('views/specialities.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const htmlContent = await response.text();
-        
-        // Load the HTML content
-        mainContent.innerHTML = htmlContent;
-        console.log('Specialities section HTML loaded');
-
-        // Load CSS
-        if (!document.querySelector('link[href="css/specialities.css"]')) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'css/specialities.css';
-            document.head.appendChild(link);
-        }
-        
-        // Initialize manager
-        window.specialitiesManager = new SpecialitiesManager();
-    } catch (error) {
-        console.error('Error loading specialities section:', error);
-        mainContent.innerHTML = `<div class="error-message">Error loading specialities section: ${error.message}</div>`;
-    }
-}
-
-async function loadDepartmentsSection() {
-    console.log('Loading departments section...');
-    const mainContent = document.querySelector('.main-content .content-body');
-    
-    if (!mainContent) {
-        console.error('Main content element not found');
-        return;
-    }
-
-    try {
-        // Fetch the departments section HTML template
-        const response = await fetch('views/departments.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const htmlContent = await response.text();
-        
-        // Load the HTML content
-        mainContent.innerHTML = htmlContent;
-        console.log('Departments section HTML loaded');
-
-        // Load CSS
-        if (!document.querySelector('link[href="css/departments.css"]')) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'css/departments.css';
-            document.head.appendChild(link);
-        }
-        
-        // Initialize manager
-        window.departmentsManager = new DepartmentsManager();
-    } catch (error) {
-        console.error('Error loading departments section:', error);
-        mainContent.innerHTML = `<div class="error-message">Error loading departments section: ${error.message}</div>`;
-    }
-}
-
-async function loadLevelsSection() {
-    console.log('Loading levels section...');
-    const mainContent = document.querySelector('.main-content .content-body');
-    
-    if (!mainContent) {
-        console.error('Main content element not found');
-        return;
-    }
-
-    try {
-        // Fetch the levels section HTML template
-        const response = await fetch('views/levels.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const htmlContent = await response.text();
-        
-        // Load the HTML content
-        mainContent.innerHTML = htmlContent;
-        console.log('Levels section HTML loaded');
-
-        // Load CSS
-        if (!document.querySelector('link[href="css/levels.css"]')) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'css/levels.css';
-            document.head.appendChild(link);
-        }
-        
-        // Initialize manager
-        window.levelsManager = new LevelsManager();
-    } catch (error) {
-        console.error('Error loading levels section:', error);
-        mainContent.innerHTML = `<div class="error-message">Error loading levels section: ${error.message}</div>`;
-    }
-}
-
-async function loadModulesSection() {
-    console.log('Loading modules section...');
-    const mainContent = document.querySelector('.main-content .content-body');
-    
-    if (!mainContent) {
-        console.error('Main content element not found');
-        return;
-    }
-
-    try {
-        // Fetch the modules section HTML template
-        const response = await fetch('views/modules.html');
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const htmlContent = await response.text();
-        
-        // Load the HTML content
-        mainContent.innerHTML = htmlContent;
-        console.log('Modules section HTML loaded');
-
-        // Load CSS
-        if (!document.querySelector('link[href="css/modules.css"]')) {
-            const link = document.createElement('link');
-            link.rel = 'stylesheet';
-            link.href = 'css/modules.css';
-            document.head.appendChild(link);
-        }
-        
-        // Initialize manager
-        window.modulesManager = new ModulesManager();
-    } catch (error) {
-        console.error('Error loading modules section:', error);
-        mainContent.innerHTML = `<div class="error-message">Error loading modules section: ${error.message}</div>`;
-    }
-}
-
-async function fetchDashboardStats() {
-    const token = localStorage.getItem('token');
-    const baseUrl = config.backendUrl;
-
-    try {
-        // Fetch teachers count
-        const teachersResponse = await fetch(`${baseUrl}/api/teachers`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+            // Load section content
+            switch (section) {
+                case 'dashboard':
+                    await this.loadDashboardStats();
+                    break;
+                case 'teachers':
+                    await this.loadTeachersSection();
+                    break;
+                case 'departments':
+                    await this.loadDepartmentsSection();
+                    break;
+                case 'specialities':
+                    await this.loadSpecialitiesSection();
+                    break;
+                case 'levels':
+                    await this.loadLevelsSection();
+                    break;
+                case 'modules':
+                    await this.loadModulesSection();
+                    break;
+                case 'rooms':
+                    await this.loadRoomsSection();
+                    break;
+                case 'roles':
+                    if (this.currentUser.role === 'ADMIN') {
+                        await this.loadRolesSection();
+                    } else {
+                        this.showAccessDenied();
+                    }
+                    break;
+                default:
+                    this.showNotImplemented();
             }
-        });
-        const teachersData = await teachersResponse.json();
-        document.getElementById('teacherCount').textContent = teachersData.length || 0;
+        } catch (error) {
+            console.error('Error loading section:', error);
+            this.showError();
+        }
+    }
 
-        // Fetch modules count
-        const modulesResponse = await fetch(`${baseUrl}/api/modules`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const modulesData = await modulesResponse.json();
-        document.getElementById('moduleCount').textContent = modulesData.length || 0;
+    async loadSectionContent(viewPath) {
+        const response = await fetch(viewPath);
+        const html = await response.text();
+        this.contentBody.innerHTML = html;
+    }
 
-        // Fetch rooms count
-        const roomsResponse = await fetch(`${baseUrl}/api/rooms`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const roomsData = await roomsResponse.json();
-        document.getElementById('roomCount').textContent = roomsData.length || 0;
+    async loadDashboardStats() {
+        // Reset content to show dashboard stats
+        this.contentBody.innerHTML = `
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <h3>Total Teachers</h3>
+                    <p id="teacherCount">Loading...</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Total Modules</h3>
+                    <p id="moduleCount">Loading...</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-door-open"></i>
+                    <h3>Total Rooms</h3>
+                    <p id="roomCount">Loading...</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <h3>Active Semester</h3>
+                    <p id="currentSemester">Loading...</p>
+                </div>
+            </div>
+        `;
 
-        // Fetch current semester
-        const semestersResponse = await fetch(`${baseUrl}/api/semesters`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        const semestersData = await semestersResponse.json();
-        const currentSemester = semestersData.find(sem => sem.isActive);
-        document.getElementById('currentSemester').textContent = currentSemester ? currentSemester.name : 'None';
-    } catch (error) {
-        console.error('Error fetching dashboard stats:', error);
+        // Load actual stats
+        await this.updateDashboardStats();
+    }
+
+    async updateDashboardStats() {
+        try {
+            const [teachers, modules, rooms] = await Promise.all([
+                fetch(`${config.backendUrl}/api/teachers`),
+                fetch(`${config.backendUrl}/api/modules`),
+                fetch(`${config.backendUrl}/api/rooms`)
+            ]);
+
+            const [teachersData, modulesData, roomsData] = await Promise.all([
+                teachers.json(),
+                modules.json(),
+                rooms.json()
+            ]);
+
+            document.getElementById('teacherCount').textContent = teachersData.length;
+            document.getElementById('moduleCount').textContent = modulesData.length;
+            document.getElementById('roomCount').textContent = roomsData.length;
+            document.getElementById('currentSemester').textContent = '2024/2025 - S2';
+        } catch (error) {
+            console.error('Error updating dashboard stats:', error);
+        }
+    }
+
+    async loadTeachersSection() {
+        await this.loadSectionContent('views/teachers.html');
+        new TeachersManager();
+    }
+
+    async loadDepartmentsSection() {
+        await this.loadSectionContent('views/departments.html');
+        new DepartmentsManager();
+    }
+
+    async loadSpecialitiesSection() {
+        await this.loadSectionContent('views/specialities.html');
+        new SpecialitiesManager();
+    }
+
+    async loadLevelsSection() {
+        await this.loadSectionContent('views/levels.html');
+        new LevelsManager();
+    }
+
+    async loadModulesSection() {
+        await this.loadSectionContent('views/modules.html');
+        new ModulesManager();
+    }
+
+    async loadRoomsSection() {
+        await this.loadSectionContent('views/rooms.html');
+        new RoomsManager();
+    }
+
+    async loadRolesSection() {
+        await this.loadSectionContent('views/roles.html');
+        new RolesManager();
+    }
+
+    showAccessDenied() {
+        this.contentBody.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-lock"></i>
+                <h2>Access Denied</h2>
+                <p>You don't have permission to access this section.</p>
+            </div>
+        `;
+    }
+
+    showNotImplemented() {
+        this.contentBody.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-tools"></i>
+                <h2>Under Construction</h2>
+                <p>This section is not implemented yet.</p>
+            </div>
+        `;
+    }
+
+    showError() {
+        this.contentBody.innerHTML = `
+            <div class="error-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h2>Error</h2>
+                <p>An error occurred while loading the content. Please try again.</p>
+            </div>
+        `;
+    }
+
+    async handleLogout() {
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
     }
 }
 
-// Update the section loaders object
-const sectionLoaders = {
-    teachers: loadTeachersSection,
-    specialities: loadSpecialitiesSection,
-    departments: loadDepartmentsSection,
-    levels: loadLevelsSection,
-    modules: loadModulesSection,
-    // ... other sections ...
-}; 
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', () => {
+    new Dashboard();
+}); 

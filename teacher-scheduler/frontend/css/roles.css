@@ -1,0 +1,124 @@
+.roles-section {
+    padding: 20px;
+}
+
+.roles-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.roles-table th,
+.roles-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.roles-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.roles-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.roles-table .btn-edit,
+.roles-table .btn-delete {
+    padding: 6px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.roles-table .btn-edit {
+    background-color: #28a745;
+    color: white;
+}
+
+.roles-table .btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.roles-table .btn-edit:hover {
+    background-color: #218838;
+}
+
+.roles-table .btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Permissions Grid Styles */
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.permission-group {
+    background-color: white;
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.permission-group h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 16px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+}
+
+.permission-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+}
+
+.permission-item input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.permission-item:hover {
+    color: #333;
+}
+
+/* Permission Tags in Table */
+.permission-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.permission-tag {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+/* Admin Only Elements */
+.admin-only {
+    display: none;
+}
+
+.is-admin .admin-only {
+    display: block;
+} 

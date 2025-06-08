@@ -6,7 +6,7 @@
         </button>
     </div>
     
-    <table class="departments-table">
+    <table class="academic-table">
         <thead>
             <tr>
                 <th>Code</th>
@@ -16,7 +16,24 @@
             </tr>
         </thead>
         <tbody id="departmentsTableBody">
-            <!-- Departments will be loaded here -->
+            <!-- Template for department row -->
+            <template id="departmentRowTemplate">
+                <tr>
+                    <td data-field="code"></td>
+                    <td data-field="name"></td>
+                    <td data-field="description"></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </template>
         </tbody>
     </table>
 </div>

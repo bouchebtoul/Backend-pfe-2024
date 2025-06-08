@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 // Store the token in localStorage
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('token', data.accessToken);
                 
                 // Clear any error messages
                 errorMessage.textContent = '';

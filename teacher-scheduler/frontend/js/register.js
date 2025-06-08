@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 // Registration successful
-                localStorage.setItem('token', data.token);
+                localStorage.setItem('token', data.accessToken);
                 errorMessage.textContent = '';
                 
                 // Show success message and redirect

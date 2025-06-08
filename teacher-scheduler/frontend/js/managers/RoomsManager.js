@@ -3,6 +3,7 @@ class RoomsManager {
         this.rooms = [];
         this.currentRoom = null;
         this.modal = null;
+        this.initialize();
     }
 
     async initialize() {
@@ -167,6 +168,6 @@ class RoomsManager {
         }
     }
 }
-
+export default RoomsManager; 
 // Initialize when the section is loaded
-window.roomsManager = new RoomsManager(); 
+// window.roomsManager = new RoomsManager(); 

@@ -6,9 +6,9 @@
         </button>
     </div>
     
-    <table class="modules-table">
+    <table class="academic-table">
         <thead>
-            <tr class="header-row">
+            <tr>
                 <th>Code</th>
                 <th>Name</th>
                 <th>Level</th>
@@ -32,7 +32,29 @@
             </tr>
         </thead>
         <tbody id="modulesTableBody">
-            <!-- Modules will be loaded here -->
+            <!-- Template for module row -->
+            <template id="moduleRowTemplate">
+                <tr>
+                    <td data-field="code"></td>
+                    <td data-field="name"></td>
+                    <td data-field="level"></td>
+                    <td data-field="semester"></td>
+                    <td data-field="credits"></td>
+                    <td data-field="coefficient"></td>
+                    <td data-field="teachingUnit"></td>
+                    <td data-field="hours"></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn-edit" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn-delete" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </template>
         </tbody>
     </table>
 </div>
@@ -56,7 +78,7 @@
                        placeholder="Enter module name">
             </div>
 
-            <div class="form-row selection-row">
+            <div class="selection-row">
                 <div class="form-group">
                     <label for="departmentId">Department</label>
                     <select id="departmentId" name="departmentId" required>
@@ -84,45 +106,50 @@
 
             <div class="form-group">
                 <label for="semester">Semester</label>
-                <input type="number" id="semester" name="semester" required 
-                       placeholder="Enter semester number" min="1" max="2">
-            </div>
-
-            <div class="form-group">
-                <label for="credits">Credits</label>
-                <input type="number" id="credits" name="credits" required 
-                       placeholder="Enter credits" min="1">
-            </div>
-
-            <div class="form-group">
-                <label for="coefficient">Coefficient</label>
-                <input type="number" id="coefficient" name="coefficient" required 
-                       placeholder="Enter coefficient" min="1" step="0.1">
-            </div>
-
-            <div class="form-group">
-                <label for="teachingUnitCode">Teaching Unit Code</label>
-                <input type="text" id="teachingUnitCode" name="teachingUnitCode" required 
-                       placeholder="Enter teaching unit code">
+                <select id="semester" name="semester" required>
+                    <option value="">Select semester</option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                </select>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
-                    <label for="lects">Lectures Hours</label>
+                    <label for="credits">Credits</label>
+                    <input type="number" id="credits" name="credits" required 
+                           min="1" max="30" placeholder="Credits">
+                </div>
+
+                <div class="form-group">
+                    <label for="coefficient">Coefficient</label>
+                    <input type="number" id="coefficient" name="coefficient" required 
+                           min="1" max="5" placeholder="Coefficient">
+                </div>
+
+                <div class="form-group">
+                    <label for="teachingUnitCode">Teaching Unit Code</label>
+                    <input type="text" id="teachingUnitCode" name="teachingUnitCode" required 
+                           placeholder="e.g., UE1, UE2">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lects">Lecture Hours</label>
                     <input type="number" id="lects" name="lects" required 
-                           placeholder="Lectures" min="0">
+                           min="0" placeholder="Lecture hours">
                 </div>
 
                 <div class="form-group">
-                    <label for="tuts">Tutorials Hours</label>
+                    <label for="tuts">Tutorial Hours</label>
                     <input type="number" id="tuts" name="tuts" required 
-                           placeholder="Tutorials" min="0">
+                           min="0" placeholder="Tutorial hours">
                 </div>
 
                 <div class="form-group">
-                    <label for="wkshs">Workshops Hours</label>
+                    <label for="wkshs">Workshop Hours</label>
                     <input type="number" id="wkshs" name="wkshs" required 
-                           placeholder="Workshops" min="0">
+                           min="0" placeholder="Workshop hours">
                 </div>
             </div>
             

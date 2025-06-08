@@ -5,6 +5,7 @@ class TeachersManager {
         this.grades = [];
         this.currentTeacher = null;
         this.modal = null;
+        this.initialize();
     }
 
     async initialize() {
@@ -234,6 +235,6 @@ class TeachersManager {
         }
     }
 }
-
+export default TeachersManager; 
 // Initialize when the section is loaded
-window.teachersManager = new TeachersManager(); 
+// window.teachersManager = new TeachersManager(); 
