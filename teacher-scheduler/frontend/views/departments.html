@@ -1,0 +1,52 @@
+<div class="departments-section">
+    <div class="section-header">
+        <h2>Departments Management</h2>
+        <button id="addDepartmentBtn" class="add-button">
+            <i class="fas fa-plus"></i> Add Department
+        </button>
+    </div>
+    
+    <table class="departments-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="departmentsTableBody">
+            <!-- Departments will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Department Modal -->
+<div id="departmentModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="departmentModalTitle" class="modal-title">Add New Department</h2>
+        
+        <form id="departmentForm">
+            <div class="form-group">
+                <label for="code">Code</label>
+                <input type="text" id="code" name="code" required 
+                       placeholder="Enter department code">
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter department name">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3"
+                          placeholder="Enter department description"></textarea>
+            </div>
+            
+            <button type="submit" class="submit-button">Save Department</button>
+        </form>
+    </div>
+</div> 

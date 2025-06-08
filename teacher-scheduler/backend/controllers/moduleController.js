@@ -11,7 +11,7 @@ exports.addModule = async (req, res) => {
 
 exports.getModules = async (req, res) => {
   try {
-    const modules = await Module.find().populate("levelid departmentid semesterid");
+    const modules = await Module.find().populate("levelid");
     res.json(modules);
   } catch (error) {
     res.status(500).json({ error: error.message });

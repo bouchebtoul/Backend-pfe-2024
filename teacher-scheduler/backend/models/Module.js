@@ -2,9 +2,17 @@ const mongoose = require("mongoose");
 
 const ModuleSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
+  code: { type: String, required: true, unique: true },
   levelid: { type: mongoose.Schema.Types.ObjectId, ref: "Level", required: true },
-  departmentid: { type: mongoose.Schema.Types.ObjectId, ref: "Department", required: true },
-  semesterid: { type: mongoose.Schema.Types.ObjectId, ref: "Semester", required: true },
+  semester: { type: Number, required: true },
+  credits: { type: Number, required: true },
+  coefficient: { type: Number, required: true },
+  teachingUnitCode: { type: String, required: true },
+  lects: { type: Number, required: true },
+  tuts: { type: Number, required: true },
+  wkshs: { type: Number, required: true },
+  // departmentid: { type: mongoose.Schema.Types.ObjectId, ref: "Department", required: true },
+  // semesterid: { type: mongoose.Schema.Types.ObjectId, ref: "Semester", required: true },
 });
 
 module.exports = mongoose.model("Module", ModuleSchema);

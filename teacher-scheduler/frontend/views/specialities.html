@@ -1,0 +1,60 @@
+<div class="specialities-section">
+    <div class="section-header">
+        <h2>Specialities Management</h2>
+        <button id="addSpecialityBtn" class="add-button">
+            <i class="fas fa-plus"></i> Add Speciality
+        </button>
+    </div>
+    
+    <table class="specialities-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="specialitiesTableBody">
+            <!-- Specialities will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Speciality Modal -->
+<div id="specialityModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="specialityModalTitle" class="modal-title">Add New Speciality</h2>
+        
+        <form id="specialityForm">
+            <div class="form-group">
+                <label for="code">Code</label>
+                <input type="text" id="code" name="code" required 
+                       placeholder="Enter speciality code">
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter speciality name">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3"
+                          placeholder="Enter speciality description"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="departmentid">Department</label>
+                <select id="departmentid" name="departmentid" class="department-select" required>
+                    <option value="">Select Department</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-button">Save Speciality</button>
+        </form>
+    </div>
+</div> 

@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 
 const TeacherSchema = new mongoose.Schema({
-  fullname: { type: String, required: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   gradeid: { type: mongoose.Schema.Types.ObjectId, ref: "Grade", required: true },
   departmentid: { type: mongoose.Schema.Types.ObjectId, ref: "Department", required: true },
   modules: [
@@ -17,5 +18,14 @@ const TeacherSchema = new mongoose.Schema({
     },
   ],
 });
+
+// Virtual for full name
+TeacherSchema.virtual('fullname').get(function() {
+  return `${this.firstName} ${this.lastName}`;
+});
+
+// Ensure virtuals are included when converting document to JSON
+TeacherSchema.set('toJSON', { virtuals: true });
+TeacherSchema.set('toObject', { virtuals: true });
 
 module.exports = mongoose.model("Teacher", TeacherSchema);

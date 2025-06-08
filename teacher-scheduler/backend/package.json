@@ -1,4 +1,11 @@
 {
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "migrate": "node migrations/migrate.js",
+    "migrate:down": "node migrations/migrate.js down",
+    "migrate:create": "node migrations/create.js"
+  },
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.2",

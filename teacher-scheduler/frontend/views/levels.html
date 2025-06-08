@@ -1,0 +1,61 @@
+<div class="levels-section">
+    <div class="section-header">
+        <h2>Levels Management</h2>
+        <button id="addLevelBtn" class="add-button">
+            <i class="fas fa-plus"></i> Add Level
+        </button>
+    </div>
+    
+    <table class="levels-table">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Speciality</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="levelsTableBody">
+            <!-- Levels will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Level Modal -->
+<div id="levelModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="levelModalTitle" class="modal-title">Add New Level</h2>
+        
+        <form id="levelForm">
+            <div class="form-group">
+                <label for="code">Code</label>
+                <input type="text" id="code" name="code" required 
+                       placeholder="Enter level code">
+            </div>
+
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required 
+                       placeholder="Enter level name">
+            </div>
+
+            <div class="form-group">
+                <label for="specialityId">Speciality</label>
+                <select id="specialityId" name="specialityId" required>
+                    <option value="">Select a speciality</option>
+                    <!-- Specialities will be loaded here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" rows="3"
+                          placeholder="Enter level description"></textarea>
+            </div>
+            
+            <button type="submit" class="submit-button">Save Level</button>
+        </form>
+    </div>
+</div> 

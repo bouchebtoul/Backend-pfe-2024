@@ -1,0 +1,56 @@
+<div class="rooms-section">
+    <div class="section-header">
+        <h2>Rooms Management</h2>
+        <button id="addRoomBtn" class="add-button">
+            <i class="fas fa-plus"></i> Add Room
+        </button>
+    </div>
+    
+    <table class="rooms-table">
+        <thead>
+            <tr>
+                <th>Room Number</th>
+                <th>Capacity</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="roomsTableBody">
+            <!-- Rooms will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Room Modal -->
+<div id="roomModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="roomModalTitle" class="modal-title">Add New Room</h2>
+        
+        <form id="roomForm">
+            <div class="form-group">
+                <label for="roomNumber">Room Number</label>
+                <input type="text" id="roomNumber" name="roomNumber" required 
+                       placeholder="Enter room number">
+            </div>
+            
+            <div class="form-group">
+                <label for="capacity">Capacity</label>
+                <input type="number" id="capacity" name="capacity" required 
+                       placeholder="Enter room capacity" min="1">
+            </div>
+            
+            <div class="form-group">
+                <label for="type">Room Type</label>
+                <select id="type" name="type" required>
+                    <option value="">Select Room Type</option>
+                    <option value="CLASSROOM">Classroom</option>
+                    <option value="LAB">Laboratory</option>
+                    <option value="AMPHITHEATER">Amphitheater</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-button">Save Room</button>
+        </form>
+    </div>
+</div> 

@@ -1,0 +1,61 @@
+<div class="teachers-section">
+    <div class="section-header">
+        <h2>Teachers Management</h2>
+        <button id="addTeacherBtn" class="add-button">
+            <i class="fas fa-plus"></i> Add Teacher
+        </button>
+    </div>
+    
+    <table class="teachers-table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Grade</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="teachersTableBody">
+            <!-- Teachers will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Teacher Modal -->
+<div id="teacherModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="teacherModalTitle" class="modal-title">Add New Teacher</h2>
+        
+        <form id="teacherForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required 
+                       placeholder="Enter teacher's first name">
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required 
+                       placeholder="Enter teacher's last name">
+            </div>
+            
+            <div class="form-group">
+                <label for="gradeid">Grade</label>
+                <select id="gradeid" name="gradeid" class="grade-select" required>
+                    <option value="">Select Grade</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="departmentid">Department</label>
+                <select id="departmentid" name="departmentid" class="department-select" required>
+                    <option value="">Select Department</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-button">Save Teacher</button>
+        </form>
+    </div>
+</div> 

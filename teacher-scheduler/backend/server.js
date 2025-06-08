@@ -8,18 +8,17 @@ const { initializeSocket } = require("./socket");
 dotenv.config();
 
 const app = express();
-const server = createServer(app); // Create HTTP server
-const io = initializeSocket(server); // Initialize WebSocket
+const httpServer = createServer(app);
 
-app.use(express.json());
+// Middleware
 app.use(cors());
+app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log("✅ MongoDB connected"))
-  .catch(err => console.error("❌ MongoDB error:", err));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("Connected to MongoDB"))
+  .catch((err) => console.error("MongoDB connection error:", err));
 
 // Import routes
 const semesterRoutes = require("./routes/semesterRoutes");
@@ -33,7 +32,8 @@ const scheduleRoutes = require("./routes/scheduleRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const authRoutes = require("./routes/authRoutes");
 const roleRoutes = require("./routes/roleRoutes");
-
+const roomRoutes = require("./routes/roomRoutes");
+const specialityRoutes = require("./routes/specialityRoutes");
 // Use routes
 app.use("/api/semesters", semesterRoutes);
 app.use("/api/modules", moduleRoutes);
@@ -45,8 +45,14 @@ app.use("/api/levels", levelRoutes);
 app.use("/api/schedules", scheduleRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api", roleRoutes);
+app.use("/api/roles", roleRoutes);
+app.use("/api/rooms", roomRoutes);
+app.use("/api/specialities", specialityRoutes);
 
+// Initialize Socket.IO
+initializeSocket(httpServer);
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+httpServer.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
