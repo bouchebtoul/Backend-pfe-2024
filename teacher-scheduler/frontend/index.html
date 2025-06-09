@@ -4,29 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Scheduler - Login</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
-    <div class="container">
-        <div class="login-box">
-            <h2>Teacher Scheduler</h2>
-            <form id="loginForm">
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit">Login</button>
-            </form>
-            <div id="error-message" class="error-message"></div>
-            <div class="register-link">
-                Don't have an account? <a href="register.html">Register here</a>
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-header">
+                <img src="assets/univflow-logo.png" alt="University Logo" class="auth-logo">
+                <h1>Teacher Scheduler</h1>
             </div>
+            
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required 
+                           pattern="[a-z0-9._%+-]+@univ-constantine2\.dz$"
+                           placeholder="username@univ-constantine2.dz">
+                    <small class="form-text">Use your university email (@univ-constantine2.dz)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required 
+                           placeholder="Enter your password">
+                </div>
+
+                <button type="submit" class="auth-button">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <div id="g_id_onload"
+                     data-client_id="267014565448-gogfpo53qeaafschit2hn2vle58jq82q.apps.googleusercontent.com"
+                     data-context="signin"
+                     data-ux_mode="popup"
+                     data-callback="handleGoogleCallback"
+                     data-auto_prompt="false"
+                     data-hd="univ-constantine2.dz">
+                </div>
+
+                <div class="g_id_signin google-btn"
+                     data-type="standard"
+                     data-shape="rectangular"
+                     data-theme="outline"
+                     data-text="signin_with"
+                     data-size="large"
+                     data-logo_alignment="left">
+                </div>
+            </form>
         </div>
     </div>
-    <script src="js/login.js"></script>
+
+    <script type="module" src="js/auth.js"></script>
 </body>
 </html> 

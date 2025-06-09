@@ -1,0 +1,107 @@
+.users-section {
+    padding: 20px;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin-top: 20px;
+}
+
+.users-table th,
+.users-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.users-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+.users-table tbody tr:hover {
+    background-color: #f5f5f5;
+}
+
+.users-table .status-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.users-table .status-active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.users-table .status-inactive {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.users-table .role-badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.users-table .btn-edit,
+.users-table .btn-delete {
+    padding: 6px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-right: 5px;
+}
+
+.users-table .btn-edit {
+    background-color: #28a745;
+    color: white;
+}
+
+.users-table .btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.users-table .btn-edit:hover {
+    background-color: #218838;
+}
+
+.users-table .btn-delete:hover {
+    background-color: #c82333;
+}
+
+/* Form specific styles */
+.form-text {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+#email:invalid {
+    border-color: #dc3545;
+}
+
+#email:invalid + .form-text {
+    color: #dc3545;
+}
+
+.password-hint {
+    display: none;
+}
+
+/* Show password hint only when editing */
+.edit-mode .password-hint {
+    display: block;
+} 

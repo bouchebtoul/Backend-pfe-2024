@@ -8,6 +8,7 @@ import config from './config.js';
 import TeachersManager from './managers/TeachersManager.js';
 import RoomsManager from './managers/RoomsManager.js';
 import RolesManager from './managers/RolesManager.js';
+import UsersManager from './managers/UsersManager.js';
 
 class Dashboard {
     constructor() {
@@ -21,6 +22,13 @@ class Dashboard {
     }
 
     initializeEventListeners() {
+        // Handle Dashboard Menu click
+        const dashboardMenu = document.querySelector('.sidebar-header');
+        if (dashboardMenu) {
+            dashboardMenu.style.cursor = 'pointer';
+            dashboardMenu.addEventListener('click', () => this.loadSection('dashboard'));
+        }
+
         // Handle main menu items
         document.querySelectorAll('.sidebar-menu > li > a').forEach(link => {
             link.addEventListener('click', (e) => {
@@ -88,6 +96,13 @@ class Dashboard {
     }
 
     setupUserInterface() {
+        // Update profile button with user's name
+        const profileLink = document.getElementById('profileLink');
+        if (profileLink && this.currentUser) {
+            profileLink.innerHTML = `<i class="fas fa-user"></i> ${this.currentUser.fullname}`;
+            profileLink.href = 'profile.html';
+        }
+
         // Add admin class if user is admin
         if (this.currentUser.role === 'admin') {
             document.body.classList.add('is-admin');
@@ -112,6 +127,7 @@ class Dashboard {
             'modules': 'manage_modules',
             'rooms': 'manage_schedules',         // Part of schedule management
             'roles': 'manage_roles',
+            'users': 'manage_roles',             // Users management requires role management permission
             'semester': 'manage_semesters',
             'academic-year': 'manage_semesters'  // Part of semester management
         };
@@ -176,6 +192,13 @@ class Dashboard {
                         this.showAccessDenied();
                     }
                     break;
+                case 'users':
+                    if (this.currentUser.role === 'ADMIN') {
+                        await this.loadUsersSection();
+                    } else {
+                        this.showAccessDenied();
+                    }
+                    break;
                 default:
                     this.showNotImplemented();
             }
@@ -192,56 +215,82 @@ class Dashboard {
     }
 
     async loadDashboardStats() {
-        // Reset content to show dashboard stats
-        this.contentBody.innerHTML = `
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <i class="fas fa-chalkboard-teacher"></i>
-                    <h3>Total Teachers</h3>
-                    <p id="teacherCount">Loading...</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-book"></i>
-                    <h3>Total Modules</h3>
-                    <p id="moduleCount">Loading...</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-door-open"></i>
-                    <h3>Total Rooms</h3>
-                    <p id="roomCount">Loading...</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Active Semester</h3>
-                    <p id="currentSemester">Loading...</p>
-                </div>
-            </div>
-        `;
-
-        // Load actual stats
-        await this.updateDashboardStats();
-    }
-
-    async updateDashboardStats() {
         try {
-            const [teachers, modules, rooms] = await Promise.all([
-                fetch(`${config.backendUrl}/api/teachers`),
-                fetch(`${config.backendUrl}/api/modules`),
-                fetch(`${config.backendUrl}/api/rooms`)
+            // First, ensure we have the stats container
+            const contentBody = document.querySelector('.content-body');
+            if (!contentBody) return;
+
+            // Create or update the stats container
+            contentBody.innerHTML = `
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h3>Total Teachers</h3>
+                        <p id="teacherCount">Loading...</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-book"></i>
+                        <h3>Total Modules</h3>
+                        <p id="moduleCount">Loading...</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-door-open"></i>
+                        <h3>Total Rooms</h3>
+                        <p id="roomCount">Loading...</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Active Semester</h3>
+                        <p id="currentSemester">Loading...</p>
+                    </div>
+                </div>
+            `;
+
+            const token = localStorage.getItem('token');
+            
+            // Fetch all required stats in parallel
+            const [teachersRes, modulesRes, roomsRes, semesterRes] = await Promise.all([
+                fetch(`${config.backendUrl}/api/teachers`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }),
+                fetch(`${config.backendUrl}/api/modules`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }),
+                fetch(`${config.backendUrl}/api/rooms`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }),
+                fetch(`${config.backendUrl}/api/semesters/current`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
             ]);
 
-            const [teachersData, modulesData, roomsData] = await Promise.all([
-                teachers.json(),
-                modules.json(),
-                rooms.json()
+            // Check if any request failed
+            if (!teachersRes.ok || !modulesRes.ok || !roomsRes.ok || !semesterRes.ok) {
+                throw new Error('Failed to fetch dashboard stats');
+            }
+
+            // Parse all responses
+            const [teachers, modules, rooms, semester] = await Promise.all([
+                teachersRes.json(),
+                modulesRes.json(),
+                roomsRes.json(),
+                semesterRes.json()
             ]);
 
-            document.getElementById('teacherCount').textContent = teachersData.length;
-            document.getElementById('moduleCount').textContent = modulesData.length;
-            document.getElementById('roomCount').textContent = roomsData.length;
-            document.getElementById('currentSemester').textContent = '2024/2025 - S2';
+            // Update the UI with actual numbers
+            document.getElementById('teacherCount').textContent = Array.isArray(teachers) ? teachers.length : 0;
+            document.getElementById('moduleCount').textContent = Array.isArray(modules) ? modules.length : 0;
+            document.getElementById('roomCount').textContent = Array.isArray(rooms) ? rooms.length : 0;
+            document.getElementById('currentSemester').textContent = semester ? semester.name : '-';
+
         } catch (error) {
-            console.error('Error updating dashboard stats:', error);
+            console.error('Dashboard stats load error:', error);
+            // Show error state in UI if elements exist
+            const elements = ['teacherCount', 'moduleCount', 'roomCount', 'currentSemester'];
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = '-';
+            });
         }
     }
 
@@ -280,6 +329,11 @@ class Dashboard {
         new RolesManager();
     }
 
+    async loadUsersSection() {
+        await this.loadSectionContent('views/users.html');
+        new UsersManager();
+    }
+
     showAccessDenied() {
         this.contentBody.innerHTML = `
             <div class="error-message">
@@ -312,6 +366,7 @@ class Dashboard {
 
     async handleLogout() {
         localStorage.removeItem('token');
+        localStorage.removeItem('userName');
         window.location.href = 'index.html';
     }
 }

@@ -1,0 +1,80 @@
+<div class="users-section">
+    <div class="section-header">
+        <h2>Users Management</h2>
+        <button id="addUserBtn" class="add-button">
+            <i class="fas fa-plus"></i> Add User
+        </button>
+    </div>
+    
+    <table class="users-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Last Login</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="usersTableBody">
+            <!-- Users will be loaded here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- User Modal -->
+<div id="userModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 id="userModalTitle">Add New User</h2>
+        
+        <form id="userForm">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" required 
+                       placeholder="Enter first name">
+            </div>
+
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" required 
+                       placeholder="Enter last name">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email (@univ-constantine2.dz)</label>
+                <input type="email" id="email" name="email" required 
+                       pattern="[a-z0-9._%+-]+@univ-constantine2\.dz$"
+                       placeholder="username@univ-constantine2.dz">
+                <small class="form-text">Email must be from the domain @univ-constantine2.dz</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" 
+                       minlength="6"
+                       placeholder="Enter password">
+                <small class="form-text password-hint">Leave empty to keep current password (when editing)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="roleId">Role</label>
+                <select id="roleId" name="roleId" required>
+                    <option value="">Select a role</option>
+                    <!-- Roles will be loaded here -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="isActive">Status</label>
+                <select id="isActive" name="isActive">
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="submit-button">Save User</button>
+        </form>
+    </div>
+</div> 
