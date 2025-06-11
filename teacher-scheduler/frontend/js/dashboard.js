@@ -9,6 +9,7 @@ import TeachersManager from './managers/TeachersManager.js';
 import RoomsManager from './managers/RoomsManager.js';
 import RolesManager from './managers/RolesManager.js';
 import UsersManager from './managers/UsersManager.js';
+import AffectationsManager from './managers/AffectationsManager.js';
 
 class Dashboard {
     constructor() {
@@ -104,7 +105,7 @@ class Dashboard {
         }
 
         // Add admin class if user is admin
-        if (this.currentUser.role === 'admin') {
+        if (this.currentUser.role === 'ADMIN') {
             document.body.classList.add('is-admin');
         }
 
@@ -129,7 +130,7 @@ class Dashboard {
             'roles': 'manage_roles',
             'users': 'manage_roles',             // Users management requires role management permission
             'semester': 'manage_semesters',
-            'academic-year': 'manage_semesters'  // Part of semester management
+            'academic-year': 'manage_academic_year'  // Part of semester management
         };
 
         Object.entries(menuItems).forEach(([section, permission]) => {
@@ -184,6 +185,9 @@ class Dashboard {
                     break;
                 case 'rooms':
                     await this.loadRoomsSection();
+                    break;
+                case 'affectation':
+                    await this.loadAffectationsSection();
                     break;
                 case 'roles':
                     if (this.currentUser.role === 'ADMIN') {
@@ -332,6 +336,11 @@ class Dashboard {
     async loadUsersSection() {
         await this.loadSectionContent('views/users.html');
         new UsersManager();
+    }
+
+    async loadAffectationsSection() {
+        await this.loadSectionContent('views/affectations.html');
+        new AffectationsManager();
     }
 
     showAccessDenied() {

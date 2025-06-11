@@ -66,7 +66,7 @@ class SpecialitiesManager {
             <td>${speciality.code}</td>
             <td>${speciality.name}</td>
             <td>${speciality.description || ''}</td>
-            <td>${speciality.departmentid ? speciality.departmentid.name : ''}</td>
+            <td>${speciality.departmentid ? speciality.departmentid.code : ''}</td>
             <td>
                 <button class="btn-edit" data-id="${speciality._id}">
                     <i class="fas fa-edit"></i>
@@ -104,7 +104,7 @@ class SpecialitiesManager {
         document.getElementById('code').value = speciality.code;
         document.getElementById('name').value = speciality.name;
         document.getElementById('description').value = speciality.description || '';
-        document.getElementById('departmentid').value = speciality.departmentid;
+        document.getElementById('departmentid').value = speciality.departmentid._id;
         
         this.specialityModal.classList.add('show');
     }

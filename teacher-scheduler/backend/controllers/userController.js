@@ -175,8 +175,8 @@ exports.deleteUser = async (req, res) => {
     }
 
     // Prevent deleting the last admin user
-    if (user.role === 'admin') {
-      const adminCount = await User.countDocuments({ role: 'admin' });
+    if (user.role === 'ADMIN') {
+      const adminCount = await User.countDocuments({ role: 'ADMIN' });
       if (adminCount <= 1) {
         return res.status(400).json({ 
           message: "Cannot delete the last admin user" 

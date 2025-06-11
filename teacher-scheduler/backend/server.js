@@ -34,6 +34,7 @@ const authRoutes = require("./routes/authRoutes");
 const roleRoutes = require("./routes/roleRoutes");
 const roomRoutes = require("./routes/roomRoutes");
 const specialityRoutes = require("./routes/specialityRoutes");
+const affectationRoutes = require("./routes/affectationRoutes");
 // Use routes
 app.use("/api/semesters", semesterRoutes);
 app.use("/api/modules", moduleRoutes);
@@ -48,6 +49,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/roles", roleRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/specialities", specialityRoutes);
+app.use("/api/affectations", affectationRoutes);
 
 // Initialize Socket.IO
 initializeSocket(httpServer);

@@ -1,0 +1,136 @@
+<!-- Add CSS link -->
+<link rel="stylesheet" href="css/affectations.css">
+
+<!-- Affectation Management Section -->
+<div class="section-header">
+    <h2>Teacher-Module Affectations</h2>
+    <button class="btn-primary" id="addAffectationBtn">
+        <i class="fas fa-plus"></i> New Affectation
+    </button>
+</div>
+
+<!-- Affectation Form Modal -->
+<div class="modal" id="affectationModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modalTitle">Add New Affectation</h3>
+            <button class="close-btn">&times;</button>
+        </div>
+        <form id="affectationForm">
+            <div class="form-group">
+                <label for="teacher">Teacher</label>
+                <select id="teacher" name="teacher" required>
+                    <option value="">Select Teacher</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="module">Module</label>
+                <select id="module" name="module" required>
+                    <option value="">Select Module</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="academicYear">Academic Year</label>
+                <select id="academicYear" name="academicYear" required>
+                    <option value="2023-2024">2023-2024</option>
+                    <option value="2024-2025" selected>2024-2025</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="semester">Semester</label>
+                <select id="semester" name="semester" required>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="lectures">Lectures</label>
+                    <input type="number" id="lectures" name="lectures" min="0" value="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tutorials">Tutorials</label>
+                    <input type="number" id="tutorials" name="tutorials" min="0" value="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="workshops">Workshops</label>
+                    <input type="number" id="workshops" name="workshops" min="0" value="0" required>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">Save Affectation</button>
+                <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Affectations List -->
+<div class="affectations-list">
+    <div class="filters">
+        <div class="form-group">
+            <label for="filterAcademicYear">Academic Year</label>
+            <select id="filterAcademicYear">
+                <option value="">All Years</option>
+                <option value="2023-2024">2023-2024</option>
+                <option value="2024-2025" selected>2024-2025</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="filterSemester">Semester</label>
+            <select id="filterSemester">
+                <option value="">All Semesters</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="affectationsList" class="accordion-list">
+        <!-- Affectations will be loaded here -->
+    </div>
+</div>
+
+<!-- Affectation List Item Template -->
+<template id="affectationTemplate">
+    <div class="accordion-item">
+        <div class="accordion-header">
+            <div class="teacher-info">
+                <h3 class="teacher-name"></h3>
+                <div class="session-totals">
+                    <span class="total-lectures"><i class="fas fa-chalkboard-teacher"></i> <span></span></span>
+                    <span class="total-tutorials"><i class="fas fa-users"></i> <span></span></span>
+                    <span class="total-workshops"><i class="fas fa-tools"></i> <span></span></span>
+                </div>
+            </div>
+            <button class="toggle-btn">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+        <div class="accordion-content">
+            <table class="affectations-table">
+                <thead>
+                    <tr>
+                        <th>Module</th>
+                        <th>Academic Year</th>
+                        <th>Semester</th>
+                        <th>Lectures</th>
+                        <th>Tutorials</th>
+                        <th>Workshops</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Module affectations will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template> 

@@ -22,11 +22,37 @@
             <tr class="filter-row">
                 <th><input type="text" class="filter-input" data-column="code" placeholder="Filter code..."></th>
                 <th><input type="text" class="filter-input" data-column="name" placeholder="Filter name..."></th>
-                <th><input type="text" class="filter-input" data-column="level" placeholder="Filter level..."></th>
-                <th><input type="number" class="filter-input" data-column="semester" placeholder="Filter semester..."></th>
-                <th><input type="number" class="filter-input" data-column="credits" placeholder="Filter credits..."></th>
-                <th><input type="number" class="filter-input" data-column="coefficient" placeholder="Filter coefficient..."></th>
-                <th><input type="text" class="filter-input" data-column="teachingUnit" placeholder="Filter unit..."></th>
+                <th>
+                    <select class="filter-input" data-column="level">
+                        <option value="">All Levels</option>
+                        <!-- Levels will be loaded here -->
+                    </select>
+                </th>
+                <th>
+                    <select class="filter-input" data-column="semester">
+                        <option value="">All Semesters</option>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                    </select>
+                </th>
+                <th>
+                    <select class="filter-input" data-column="credits">
+                        <option value="">All Credits</option>
+                        <!-- Credits options will be loaded dynamically -->
+                    </select>
+                </th>
+                <th>
+                    <select class="filter-input" data-column="coefficient">
+                        <option value="">All Coefficients</option>
+                        <!-- Coefficient options will be loaded dynamically -->
+                    </select>
+                </th>
+                <th>
+                    <select class="filter-input" data-column="teachingUnit">
+                        <option value="">All Units</option>
+                        <!-- Teaching units will be loaded dynamically -->
+                    </select>
+                </th>
                 <th><input type="text" class="filter-input" data-column="hours" placeholder="Filter hours..."></th>
                 <th></th>
             </tr>

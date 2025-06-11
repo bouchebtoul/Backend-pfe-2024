@@ -76,6 +76,9 @@ class ModulesManager {
 
             // Now load modules after we have all the necessary data
             await this.loadModules();
+            
+            // Initialize filter dropdowns after loading modules
+            this.initializeFilterDropdowns();
         } catch (error) {
             console.error('Error initializing data:', error);
             alert('Failed to initialize data. Please refresh the page.');
@@ -157,9 +160,55 @@ class ModulesManager {
         const department = this.departments.find(d => d._id === speciality.departmentid._id);
         return {
             levelName: level.name,
-            specialityName: speciality.name,
-            departmentName: department ? department.name : 'N/A'
+            specialityName: speciality.code,
+            departmentName: department ? department.code : 'N/A'
         };
+    }
+
+    initializeFilterDropdowns() {
+        // Initialize level filter
+        const levelFilter = document.querySelector('.filter-input[data-column="level"]');
+        const uniqueLevels = new Set();
+        this.allModules.forEach(module => {
+            const levelInfo = this.getLevelInfo(module.levelid._id);
+            uniqueLevels.add(`${levelInfo.levelName} (${levelInfo.specialityName} - ${levelInfo.departmentName})`);
+        });
+        levelFilter.innerHTML = `
+            <option value="">All Levels</option>
+            ${Array.from(uniqueLevels).sort().map(level => `
+                <option value="${level}">${level}</option>
+            `).join('')}
+        `;
+
+        // Initialize credits filter
+        const creditsFilter = document.querySelector('.filter-input[data-column="credits"]');
+        const uniqueCredits = new Set(this.allModules.map(m => m.credits));
+        creditsFilter.innerHTML = `
+            <option value="">All Credits</option>
+            ${Array.from(uniqueCredits).sort((a, b) => a - b).map(credits => `
+                <option value="${credits}">${credits}</option>
+            `).join('')}
+        `;
+
+        // Initialize coefficient filter
+        const coefficientFilter = document.querySelector('.filter-input[data-column="coefficient"]');
+        const uniqueCoefficients = new Set(this.allModules.map(m => m.coefficient));
+        coefficientFilter.innerHTML = `
+            <option value="">All Coefficients</option>
+            ${Array.from(uniqueCoefficients).sort((a, b) => a - b).map(coef => `
+                <option value="${coef}">${coef}</option>
+            `).join('')}
+        `;
+
+        // Initialize teaching unit filter
+        const teachingUnitFilter = document.querySelector('.filter-input[data-column="teachingUnit"]');
+        const uniqueUnits = new Set(this.allModules.map(m => m.teachingUnitCode));
+        teachingUnitFilter.innerHTML = `
+            <option value="">All Units</option>
+            ${Array.from(uniqueUnits).sort().map(unit => `
+                <option value="${unit}">${unit}</option>
+            `).join('')}
+        `;
     }
 
     handleFilter(input) {
@@ -187,17 +236,17 @@ class ModulesManager {
                         return module.name.toLowerCase().includes(value);
                     case 'level': {
                         const levelInfo = this.getLevelInfo(module.levelid._id);
-                        const levelText = `${levelInfo.levelName} ${levelInfo.specialityName} ${levelInfo.departmentName}`.toLowerCase();
-                        return levelText.includes(value);
+                        const levelText = `${levelInfo.levelName} (${levelInfo.specialityName} - ${levelInfo.departmentName})`.toLowerCase();
+                        return levelText === value.toLowerCase();
                     }
                     case 'semester':
-                        return module.semester.toString() === value;
+                        return value === '' || module.semester.toString() === value;
                     case 'credits':
-                        return module.credits.toString() === value;
+                        return value === '' || module.credits.toString() === value;
                     case 'coefficient':
-                        return module.coefficient.toString() === value;
+                        return value === '' || module.coefficient.toString() === value;
                     case 'teachingUnit':
-                        return module.teachingUnitCode.toLowerCase().includes(value);
+                        return value === '' || module.teachingUnitCode.toLowerCase() === value.toLowerCase();
                     case 'hours': {
                         const hoursText = `${module.lects}/${module.tuts}/${module.wkshs}`;
                         return hoursText.includes(value);

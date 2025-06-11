@@ -90,8 +90,9 @@ class TeachersManager {
             <tr>
                 <td>${teacher.firstName}</td>
                 <td>${teacher.lastName}</td>
-                <td>${this.getGradeName(teacher.gradeid)}</td>
-                <td>${this.getDepartmentName(teacher.departmentid)}</td>
+                <td>${teacher.email || 'N/A'}</td>
+                <td>${this.getGradeName(teacher.gradeid._id)}</td>
+                <td>${this.getDepartmentName(teacher.departmentid._id)}</td>
                 <td>
                     <button class="btn-edit" data-id="${teacher._id}">
                         <i class="fas fa-edit"></i>
@@ -111,7 +112,7 @@ class TeachersManager {
 
     getDepartmentName(departmentId) {
         const department = this.departments.find(d => d._id === departmentId);
-        return department ? department.name : 'N/A';
+        return department ? department.code : 'N/A';
     }
 
     setupEventListeners() {
@@ -171,6 +172,7 @@ class TeachersManager {
         const formData = {
             firstName: document.getElementById('firstName').value,
             lastName: document.getElementById('lastName').value,
+            email: document.getElementById('email').value,
             gradeid: document.getElementById('gradeid').value,
             departmentid: document.getElementById('departmentid').value
         };
@@ -201,15 +203,15 @@ class TeachersManager {
 
     async editTeacher(teacherId) {
         this.currentTeacher = this.teachers.find(t => t._id === teacherId);
-        if (!this.currentTeacher) return;
-
-        document.getElementById('firstName').value = this.currentTeacher.firstName;
-        document.getElementById('lastName').value = this.currentTeacher.lastName;
-        document.getElementById('gradeid').value = this.currentTeacher.gradeid;
-        document.getElementById('departmentid').value = this.currentTeacher.departmentid;
-
-        document.getElementById('teacherModalTitle').textContent = 'Edit Teacher';
-        this.showModal();
+        if (this.currentTeacher) {
+            document.getElementById('firstName').value = this.currentTeacher.firstName;
+            document.getElementById('lastName').value = this.currentTeacher.lastName;
+            document.getElementById('email').value = this.currentTeacher.email || '';
+            document.getElementById('gradeid').value = this.currentTeacher.gradeid._id;
+            document.getElementById('departmentid').value = this.currentTeacher.departmentid._id;
+            document.getElementById('teacherModalTitle').textContent = 'Edit Teacher';
+            this.showModal();
+        }
     }
 
     async deleteTeacher(teacherId) {

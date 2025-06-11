@@ -114,7 +114,7 @@ class LevelsManager {
         // Fill form with level data
         document.getElementById('code').value = level.code;
         document.getElementById('name').value = level.name;
-        document.getElementById('specialityId').value = level.specialityid;
+        document.getElementById('specialityId').value = level.specialityid._id;
         document.getElementById('description').value = level.description || '';
         
         this.levelModal.classList.add('show');

@@ -27,12 +27,13 @@ exports.getTeacherById = async (req, res) => {
 
 exports.addTeacher = async (req, res) => {
   try {
-    const { firstName, lastName, gradeid, departmentid } = req.body;
+    const { firstName, lastName, gradeid, departmentid, email } = req.body;
     const teacher = await Teacher.create({
       firstName,
       lastName,
       gradeid,
-      departmentid
+      departmentid,
+      email
     });
     res.status(201).json(teacher);
   } catch (error) {
@@ -42,10 +43,10 @@ exports.addTeacher = async (req, res) => {
 
 exports.updateTeacher = async (req, res) => {
   try {
-    const { firstName, lastName, gradeid, departmentid } = req.body;
+    const { firstName, lastName, gradeid, departmentid, email } = req.body;
     const teacher = await Teacher.findByIdAndUpdate(
       req.params.id,
-      { firstName, lastName, gradeid, departmentid },
+      { firstName, lastName, gradeid, departmentid, email },
       { new: true }
     );
     if (!teacher) {
