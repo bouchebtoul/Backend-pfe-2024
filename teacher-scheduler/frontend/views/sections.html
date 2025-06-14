@@ -1,0 +1,63 @@
+<!-- Sections & Groups Management Content -->
+<div class="sections-section">
+    <div class="section-header">
+        <h2>Sections & Groups Management</h2>
+        <div class="header-buttons">
+            <button id="addSectionBtn" class="add-button">
+                <i class="fas fa-plus"></i> Add Section
+            </button>
+        </div>
+    </div>
+    
+    <!-- Sections Accordion -->
+    <div class="sections-accordion" id="sectionsAccordion">
+        <!-- Sections will be loaded here as accordion items -->
+    </div>
+</div>
+
+<!-- Section Modal -->
+<div id="sectionModal" class="modal">
+    <div class="modal-content">
+        <span id="closeSectionModal" class="close-modal">&times;</span>
+        <h3 class="modal-title">Add/Edit Section</h3>
+        <form id="sectionForm">
+            <input type="hidden" id="sectionId" name="sectionId">
+            <div class="form-group">
+                <label for="number">Section Number</label>
+                <input type="number" id="number" name="number" required>
+            </div>
+            <div class="form-group">
+                <label for="levelId">Level</label>
+                <select id="levelId" name="levelId" required>
+                    <option value="">Select Level</option>
+                </select>
+            </div>
+            <button type="submit" class="submit-button">Save Section</button>
+        </form>
+    </div>
+</div>
+
+<!-- Group Modal -->
+<div id="groupModal" class="modal">
+    <div class="modal-content">
+        <span id="closeGroupModal" class="close-modal">&times;</span>
+        <h3 class="modal-title">Add/Edit Group</h3>
+        <form id="groupForm">
+            <input type="hidden" id="groupId" name="groupId">
+            <input type="hidden" id="groupSectionId" name="groupSectionId">
+            <div class="form-group">
+                <label for="name">Group Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="capacity">Capacity</label>
+                <input type="number" id="capacity" name="capacity" required min="1">
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" name="description"></textarea>
+            </div>
+            <button type="submit" class="submit-button">Save Group</button>
+        </form>
+    </div>
+</div>

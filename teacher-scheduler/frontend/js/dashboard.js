@@ -10,6 +10,7 @@ import RoomsManager from './managers/RoomsManager.js';
 import RolesManager from './managers/RolesManager.js';
 import UsersManager from './managers/UsersManager.js';
 import AffectationsManager from './managers/AffectationsManager.js';
+import SectionsManager from './managers/SectionsManager.js';
 
 class Dashboard {
     constructor() {
@@ -66,6 +67,11 @@ class Dashboard {
         this.logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
             this.handleLogout();
+        });
+
+        document.querySelector('a[href="#sections"]').addEventListener('click', (e) => {
+            e.preventDefault();
+            this.loadSectionsSection();
         });
     }
 
@@ -128,9 +134,10 @@ class Dashboard {
             'modules': 'manage_modules',
             'rooms': 'manage_schedules',         // Part of schedule management
             'roles': 'manage_roles',
-            'users': 'manage_roles',             // Users management requires role management permission
+            'users': 'manage_users',             // Users management requires role management permission
             'semester': 'manage_semesters',
-            'academic-year': 'manage_academic_year'  // Part of semester management
+            'academic-year': 'manage_academic_year',  // Part of semester management
+            'sections': 'manage_sections'
         };
 
         Object.entries(menuItems).forEach(([section, permission]) => {
@@ -202,6 +209,9 @@ class Dashboard {
                     } else {
                         this.showAccessDenied();
                     }
+                    break;
+                case 'sections':
+                    await this.loadSectionsSection();
                     break;
                 default:
                     this.showNotImplemented();
@@ -341,6 +351,11 @@ class Dashboard {
     async loadAffectationsSection() {
         await this.loadSectionContent('views/affectations.html');
         new AffectationsManager();
+    }
+
+    async loadSectionsSection() {
+        await this.loadSectionContent('views/sections.html');
+        new SectionsManager();
     }
 
     showAccessDenied() {

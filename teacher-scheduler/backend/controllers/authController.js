@@ -8,7 +8,7 @@ const generateTokens = (user) => {
   const accessToken = jwt.sign(
     { id: user._id, role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "15m" } // Short expiry for security
+    { expiresIn: "30m" } // Short expiry for security
   );
 
   const refreshToken = jwt.sign(
@@ -82,6 +82,10 @@ const loginUser = async (req, res) => {
     // Generate Access & Refresh Tokens
     const { accessToken, refreshToken } = generateTokens(user);
     console.log("Login Response:", { accessToken, refreshToken });
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
 
     res.status(200).json({
       accessToken,

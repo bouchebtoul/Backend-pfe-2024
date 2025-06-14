@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const adminUser = {
     firstName: 'Admin',
     lastName: 'User',
-    email: 'admin@ntic.com',
+    email: 'admin@univ-constantine2.dz',
     password: 'admin123', // This will be hashed before saving
 };
 

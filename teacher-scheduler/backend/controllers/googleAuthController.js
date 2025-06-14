@@ -27,7 +27,7 @@ exports.handleGoogleCallback = async (req, res) => {
         }
 
         // Find or create user
-        let user = await User.findOne({ email }).populate('role');
+        let user = await User.findOne({ email: email }).populate('role');
         
         if (!user) {
             // For new users, assign a default role (e.g., 'teacher')

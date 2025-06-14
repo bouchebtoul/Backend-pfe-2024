@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule - Teacher Scheduler</title>
+    <link rel="stylesheet" href="css/schedule.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="nav-left">
+            <img src="assets/univflow-logo.png" alt="University Logo" class="university-logo">
+            <span class="university-name">NTIC</span>
+        </div>
+        <div class="nav-right">
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+            <a href="#" class="nav-link" id="profileLink">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="#" class="nav-link" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <div class="schedule-container">
+        <div class="schedule-header">
+            <h2>Schedule Overview</h2>
+            <div class="schedule-controls">
+                <select id="semesterSelect" class="control-select">
+                    <option value="">Select Semester</option>
+                </select>
+                <select id="academicYearSelect" class="control-select">
+                    <option value="">Select Academic Year</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="schedule-grid">
+            <div class="schedule-header-grid">
+                <!-- First level: Days -->
+                <div class="days-row">
+                    <div class="corner-cell"></div>
+                    <div class="day-cell">Saturday</div>
+                    <div class="day-cell">Sunday</div>
+                    <div class="day-cell">Monday</div>
+                    <div class="day-cell">Tuesday</div>
+                    <div class="day-cell">Wednesday</div>
+                    <div class="day-cell">Thursday</div>
+                </div>
+                <!-- Second level: Time slots for each day -->
+                <div class="timeslots-row">
+                    <div class="time-slot-header">Room</div>
+                    <div class="day-timeslots">
+                        <div class="time-slot">8:30 - 10:00</div>
+                        <div class="time-slot">10:00 - 11:30</div>
+                        <div class="time-slot">11:30 - 13:00</div>
+                        <div class="time-slot">13:00 - 14:30</div>
+                        <div class="time-slot">14:30 - 16:00</div>
+                    </div>
+                    <div class="day-timeslots">
+                        <div class="time-slot">8:30 - 10:00</div>
+                        <div class="time-slot">10:00 - 11:30</div>
+                        <div class="time-slot">11:30 - 13:00</div>
+                        <div class="time-slot">13:00 - 14:30</div>
+                        <div class="time-slot">14:30 - 16:00</div>
+                    </div>
+                    <div class="day-timeslots">
+                        <div class="time-slot">8:30 - 10:00</div>
+                        <div class="time-slot">10:00 - 11:30</div>
+                        <div class="time-slot">11:30 - 13:00</div>
+                        <div class="time-slot">13:00 - 14:30</div>
+                        <div class="time-slot">14:30 - 16:00</div>
+                    </div>
+                    <div class="day-timeslots">
+                        <div class="time-slot">8:30 - 10:00</div>
+                        <div class="time-slot">10:00 - 11:30</div>
+                        <div class="time-slot">11:30 - 13:00</div>
+                        <div class="time-slot">13:00 - 14:30</div>
+                        <div class="time-slot">14:30 - 16:00</div>
+                    </div>
+                    <div class="day-timeslots">
+                        <div class="time-slot">8:30 - 10:00</div>
+                        <div class="time-slot">10:00 - 11:30</div>
+                        <div class="time-slot">11:30 - 13:00</div>
+                        <div class="time-slot">13:00 - 14:30</div>
+                        <div class="time-slot">14:30 - 16:00</div>
+                    </div>
+                    <div class="day-timeslots">
+                        <div class="time-slot">8:30 - 10:00</div>
+                        <div class="time-slot">10:00 - 11:30</div>
+                        <div class="time-slot">11:30 - 13:00</div>
+                        <div class="time-slot">13:00 - 14:30</div>
+                        <div class="time-slot">14:30 - 16:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="schedule-body">
+                <div class="rooms-column">
+                    <!-- Room names will be populated here -->
+                </div>
+                <div class="schedule-cells" id="scheduleCells">
+                    <!-- Schedule cells will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/schedule.js"></script>
+</body>
+</html> 
