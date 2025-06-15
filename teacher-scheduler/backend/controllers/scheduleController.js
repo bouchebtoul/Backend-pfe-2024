@@ -11,10 +11,10 @@ exports.addSchedule = async (req, res) => {
 
 exports.getSchedules = async (req, res) => {
   try {
-    const { year } = req.query;
+    const { academicyearid } = req.query;
     let query = {};
-    if (year) {
-      query.yearid = year;
+    if (academicyearid) {
+      query.yearid = academicyearid;
     }
     const schedules = await Schedule.find(query)
       .populate("teacherid moduleid yearid roomid sectionid groupid");

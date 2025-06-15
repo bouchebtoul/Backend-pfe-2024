@@ -23,13 +23,21 @@ class LevelsManager {
     initializeEventListeners() {
         this.addLevelBtn.addEventListener('click', () => this.showAddModal());
         this.closeModalBtn.addEventListener('click', () => this.closeModal());
-        this.levelForm.addEventListener('submit', (e) => this.handleFormSubmit(e));
+        this.levelForm.addEventListener('submit', (e) => this.handleSubmit(e));
         
         // Close modal when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target === this.levelModal) {
                 this.closeModal();
             }
+        });
+
+        // Add color picker sync
+        const colorPicker = document.getElementById('color');
+        const colorPreview = document.getElementById('colorPreview');
+        
+        colorPicker.addEventListener('input', (e) => {
+            colorPreview.style.backgroundColor = e.target.value;
         });
     }
 
@@ -78,13 +86,18 @@ class LevelsManager {
             <td>${level.name}</td>
             <td>${this.getSpecialityName(level.specialityid._id)}</td>
             <td>${level.description || ''}</td>
+            <td data-field="color">
+                <div class="color-preview" style="background-color: ${level.color}"></div>
+            </td>
             <td>
-                <button class="btn-edit" data-id="${level._id}">
-                    <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn-delete" data-id="${level._id}">
-                    <i class="fas fa-trash"></i>
-                </button>
+                <div class="action-buttons">
+                    <button class="btn-edit" data-id="${level._id}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-delete" data-id="${level._id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
             </td>
         `;
 
@@ -103,6 +116,11 @@ class LevelsManager {
         this.currentLevelId = null;
         this.modalTitle.textContent = 'Add New Level';
         this.levelForm.reset();
+        const defaultColor = '#e3f2fd';
+        const colorInput = document.getElementById('color');
+        const colorPreview = document.getElementById('colorPreview');
+        colorInput.value = defaultColor;
+        colorPreview.style.backgroundColor = defaultColor;
         this.levelModal.classList.add('show');
     }
 
@@ -115,6 +133,10 @@ class LevelsManager {
         document.getElementById('code').value = level.code;
         document.getElementById('name').value = level.name;
         document.getElementById('specialityId').value = level.specialityid._id;
+        const colorInput = document.getElementById('color');
+        const colorPreview = document.getElementById('colorPreview');
+        colorInput.value = level.color;
+        colorPreview.style.backgroundColor = level.color;
         document.getElementById('description').value = level.description || '';
         
         this.levelModal.classList.add('show');
@@ -127,42 +149,40 @@ class LevelsManager {
         this.isEditing = false;
     }
 
-    async handleFormSubmit(e) {
+    async handleSubmit(e) {
         e.preventDefault();
         
         const formData = new FormData(this.levelForm);
-        const levelData = {
+        const data = {
             code: formData.get('code'),
             name: formData.get('name'),
             specialityid: formData.get('specialityId'),
+            color: formData.get('color'),
             description: formData.get('description')
         };
 
         try {
-            let response;
-            if (this.isEditing) {
-                response = await fetch(`${config.backendUrl}/api/levels/${this.currentLevelId}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(levelData)
-                });
-            } else {
-                response = await fetch(`${config.backendUrl}/api/levels`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(levelData)
-                });
-            }
+            const url = `${config.backendUrl}/api/levels${this.isEditing ? `/${this.currentLevelId}` : ''}`;
+            const method = this.isEditing ? 'PUT' : 'POST';
+            
+            const response = await fetch(url, {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(data)
+            });
 
             if (!response.ok) {
                 throw new Error('Failed to save level');
             }
 
             this.closeModal();
-            this.loadLevels();
+            await this.loadLevels();
         } catch (error) {
             console.error('Error saving level:', error);
-            alert('Failed to save level. Please try again.');
+            alert(error.message);
         }
     }
 

@@ -172,17 +172,47 @@
     position: relative;
 }
 
+/* Level-based Schedule Item Colors */
+.schedule-item.level-1 {
+    background-color: #e3f2fd; /* Light Blue */
+    border-left: 4px solid #2196f3;
+}
+
+.schedule-item.level-2 {
+    background-color: #e8f5e9; /* Light Green */
+    border-left: 4px solid #4caf50;
+}
+
+.schedule-item.level-3 {
+    background-color: #fff3e0; /* Light Orange */
+    border-left: 4px solid #ff9800;
+}
+
+.schedule-item.level-4 {
+    background-color: #f3e5f5; /* Light Purple */
+    border-left: 4px solid #9c27b0;
+}
+
+.schedule-item.level-5 {
+    background-color: #fce4ec; /* Light Pink */
+    border-left: 4px solid #e91e63;
+}
+
 .schedule-item {
     position: relative;
     padding: 4px 8px;
     margin: 2px 0;
-    background-color: #e3f2fd;
     border-radius: 4px;
     font-size: 12px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: background-color 0.2s;
+}
+
+.schedule-item:hover {
+    filter: brightness(0.95);
 }
 
 .schedule-delete-btn {

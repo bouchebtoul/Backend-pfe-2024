@@ -8,6 +8,8 @@ export default class ScheduleManager {
         this.rooms = [];
         this.sections = [];
         this.groups = [];
+        this.specialities = [];
+        this.levels = [];
         this.currentYear = null;
         this.currentSemester = null;
         
@@ -22,7 +24,9 @@ export default class ScheduleManager {
             this.loadTeachers(),
             this.loadRooms(),
             this.loadSections(),
-            this.loadGroups()
+            this.loadGroups(),
+            this.loadSpecialities(),
+            this.loadLevels()
         ]);
 
         // Set up event listeners
@@ -104,6 +108,32 @@ export default class ScheduleManager {
             this.groups = await response.json();
         } catch (error) {
             console.error('Error loading groups:', error);
+        }
+    }
+
+    async loadSpecialities() {
+        try {
+            const response = await fetch(`${config.backendUrl}/api/specialities`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            this.specialities = await response.json();
+        } catch (error) {
+            console.error('Error loading specialities:', error);
+        }
+    }
+
+    async loadLevels() {
+        try {
+            const response = await fetch(`${config.backendUrl}/api/levels`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            this.levels = await response.json();
+        } catch (error) {
+            console.error('Error loading levels:', error);
         }
     }
 
@@ -264,14 +294,17 @@ export default class ScheduleManager {
             // Get room type
             const room = this.rooms.find(r => r._id === cell.dataset.roomId);
             const isAmphitheater = room?.type === 'AMPHITHEATER';
+
+            // Get level
+            const levelInitial = `${this.levels.find(x=>x._id ==affectation.module.levelid).code}`;
             
             // Format the option text based on room type
             const sessionType = affectation.sessionType.charAt(0).toUpperCase() + affectation.sessionType.slice(1);
             const groupInfo = isAmphitheater ? 
-                `Section ${affectation.section.number}` : 
-                `Section ${affectation.section.number} - Group ${affectation.group.name}`;
+                `S ${affectation.section.number}` : 
+                `S ${affectation.section.number} - G ${affectation.group.name}`;
             
-            option.textContent = `${affectation.module.code} - ${affectation.teacher.firstName} ${affectation.teacher.lastName} (${sessionType} - ${groupInfo})`;
+            option.textContent = `${levelInitial} ${affectation.module.code} - ${affectation.teacher.firstName} ${affectation.teacher.lastName} (${sessionType} - ${groupInfo})`;
             option.addEventListener('click', () => this.handleScheduleSelection(cell, affectation));
             dropdown.appendChild(option);
         });
@@ -351,14 +384,16 @@ export default class ScheduleManager {
 
     async updateSchedule() {
         try {
-            const response = await fetch(
-                `${config.backendUrl}/api/schedules?academicYearId=${this.currentYear}&semesterId=${this.currentSemester}`,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    }
+            const response = await fetch(`${config.backendUrl}/api/schedules?academicyearid=${this.currentYear}&semester=${this.currentSemester}`, {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 }
-            );
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch schedules');
+            }
+
             const schedules = await response.json();
             
             // Clear existing schedule items
@@ -367,24 +402,25 @@ export default class ScheduleManager {
             // Add new schedule items
             schedules.forEach(schedule => {
                 if(!schedule.roomid) return;
-                const cell = document.querySelector(
-                    `.schedule-cell[data-room-id="${schedule.roomid._id}"][data-day="${schedule.day}"][data-slot="${this.getSlotFromTime(schedule.start)}"]`
-                );
-                
+                const cell = document.querySelector(`[data-room-id="${schedule.roomid._id}"][data-day="${schedule.day}"][data-slot="${this.getSlotFromTime(schedule.start)}"]`);
                 if (cell) {
                     const scheduleItem = document.createElement('div');
                     scheduleItem.className = 'schedule-item';
-                    scheduleItem.dataset.teacherId = schedule.teacherid._id;
                     scheduleItem.dataset.scheduleId = schedule._id;
                     
                     // Get module and teacher info
                     const module = this.modules.find(m => m._id === schedule.moduleid._id);
                     const teacher = this.teachers.find(t => t._id === schedule.teacherid._id);
+                    const level = this.levels.find(l => l._id === module.levelid._id);
                     
                     if (module && teacher) {
                         // Get section and group info
                         const section = this.sections.find(s => s._id === schedule.sectionid._id);
                         const group = schedule.groupid ? this.groups.find(g => g._id === schedule.groupid._id) : null;
+                        
+                        // Add level-based class
+                        const levelNumber = module.levelid.code.match(/\d+/)[0];
+                        scheduleItem.classList.add(`level-${levelNumber}`);
                         
                         // Format the display text
                         const sectionInitial = `S${section.number}`;
@@ -394,6 +430,9 @@ export default class ScheduleManager {
                         
                         // Create the concise display text
                         scheduleItem.textContent = `${sectionInitial}${groupInitial} ${levelInitial} ${module.code} ${teacherInitial}`;
+
+                        // Set background color from level
+                        scheduleItem.style.backgroundColor = level.color;
                         
                         // Keep the detailed info in the tooltip
                         const sessionType = schedule.type.charAt(0).toUpperCase() + schedule.type.slice(1);
@@ -421,6 +460,7 @@ export default class ScheduleManager {
             });
         } catch (error) {
             console.error('Error updating schedule:', error);
+            alert('Failed to update schedule display');
         }
     }
 
