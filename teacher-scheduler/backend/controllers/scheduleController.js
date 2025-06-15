@@ -17,7 +17,7 @@ exports.getSchedules = async (req, res) => {
       query.yearid = year;
     }
     const schedules = await Schedule.find(query)
-      .populate("teacherid moduleid levelid semesterid yearid");
+      .populate("teacherid moduleid yearid roomid sectionid groupid");
     res.json(schedules);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -27,7 +27,7 @@ exports.getSchedules = async (req, res) => {
 exports.getScheduleById = async (req, res) => {
   try {
     const schedule = await Schedule.findById(req.params.id)
-      .populate("teacherid moduleid levelid semesterid yearid");
+      .populate("teacherid moduleid yearid roomid sectionid groupid");
     if (!schedule) {
       return res.status(404).json({ message: "Schedule not found" });
     }

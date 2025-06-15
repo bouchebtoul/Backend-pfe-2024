@@ -13,7 +13,7 @@ async function loadAcademicYears() {
         years.forEach(year => {
             const option = document.createElement('option');
             option.value = year.id;
-            option.textContent = year.name;
+            option.textContent = year.year;
             select.appendChild(option);
         });
 

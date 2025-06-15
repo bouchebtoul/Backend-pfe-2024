@@ -48,6 +48,7 @@ exports.getAffectations = async (req, res) => {
             {
                 $group: {
                     _id: '$teacher',
+                    teacherid: { $first: '$teacher' },
                     teacherName: { 
                         $first: {
                             $concat: [

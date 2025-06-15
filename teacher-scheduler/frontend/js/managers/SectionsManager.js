@@ -226,7 +226,8 @@ class SectionsManager {
     async saveSection() {
         const formData = {
             number: parseInt(document.getElementById('number').value),
-            levelId: document.getElementById('levelId').value
+            levelid: document.getElementById('levelId').value,
+            capacity: parseInt(document.getElementById('sectionCapacity').value)
         };
 
         try {
@@ -265,7 +266,7 @@ class SectionsManager {
         const formData = {
             name: document.getElementById('name').value,
             sectionid: document.getElementById('groupSectionId').value,
-            capacity: parseInt(document.getElementById('capacity').value),
+            capacity: parseInt(document.getElementById('groupCapacity').value),
             description: document.getElementById('description').value
         };
 
@@ -299,6 +300,7 @@ class SectionsManager {
 
         document.getElementById('number').value = this.currentSection.number;
         document.getElementById('levelId').value = this.currentSection.levelid._id;
+        document.getElementById('sectionCapacity').value = this.currentSection.capacity;
 
         document.querySelector('#sectionModal .modal-title').textContent = 'Edit Section';
         this.showModal(this.sectionModal);
@@ -310,7 +312,7 @@ class SectionsManager {
 
         document.getElementById('name').value = this.currentGroup.name;
         document.getElementById('groupSectionId').value = this.currentGroup.sectionid._id;
-        document.getElementById('capacity').value = this.currentGroup.capacity;
+        document.getElementById('groupCapacity').value = this.currentGroup.capacity;
         document.getElementById('description').value = this.currentGroup.description || '';
 
         document.querySelector('#groupModal .modal-title').textContent = 'Edit Group';

@@ -1,52 +1,92 @@
 import config from './config.js';
+import ScheduleManager from './managers/ScheduleManager.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    loadAcademicYears();
-    loadSemesters();
-    loadRooms();
+// Helper function to handle API responses and token expiration
+async function handleApiResponse(response) {
+    if (response.status === 401) {
+        // Token expired or invalid
+        localStorage.removeItem('token');
+        window.location.href = '/index.html';
+        throw new Error('Session expired. Please login again.');
+    }
+    return response;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize schedule manager first
+    window.scheduleManager = new ScheduleManager();
+    
+    // Then load the data
+    await Promise.all([
+        loadAcademicYears(),
+        loadSemesters(),
+        loadRooms(),
+        loadSchedule()
+    ]);
 });
 
 async function loadAcademicYears() {
     try {
-        const response = await fetch(`${config.backendUrl}/api/academic-years`);
+        const response = await fetch(`${config.backendUrl}/api/years`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        await handleApiResponse(response);
         const years = await response.json();
         const select = document.getElementById('academicYearSelect');
         
         years.forEach(year => {
             const option = document.createElement('option');
-            option.value = year.id;
-            option.textContent = year.name;
+            option.value = year._id;
+            option.textContent = year.year;
             select.appendChild(option);
         });
 
-        select.addEventListener('change', loadSchedule);
+        // Set initial year
+        if (years.length > 0) {
+            select.value = years[0]._id;
+            window.scheduleManager.currentYear = years[0]._id;
+        }
     } catch (error) {
-        console.error('Error loading academic years:', error);
+        if (error.message !== 'Session expired. Please login again.') {
+            console.error('Error loading academic years:', error);
+        }
     }
 }
 
-async function loadSemesters() {
-    try {
-        const response = await fetch(`${config.backendUrl}/api/semesters`);
-        const semesters = await response.json();
-        const select = document.getElementById('semesterSelect');
-        
-        semesters.forEach(semester => {
-            const option = document.createElement('option');
-            option.value = semester.id;
-            option.textContent = semester.name;
-            select.appendChild(option);
-        });
+function loadSemesters() {
+    const select = document.getElementById('semesterSelect');
+    
+    // Clear existing options
+    select.innerHTML = '';
+    
+    // Add static semester options
+    const semesters = [
+        { id: 1, name: 'Semester 1' },
+        { id: 2, name: 'Semester 2' }
+    ];
+    
+    semesters.forEach(semester => {
+        const option = document.createElement('option');
+        option.value = semester.id;
+        option.textContent = semester.name;
+        select.appendChild(option);
+    });
 
-        select.addEventListener('change', loadSchedule);
-    } catch (error) {
-        console.error('Error loading semesters:', error);
-    }
+    // Set initial semester
+    select.value = semesters[0].id;
+    window.scheduleManager.currentSemester = semesters[0].id;
 }
 
 async function loadRooms() {
     try {
-        const response = await fetch(`${config.backendUrl}/api/rooms`);
+        const response = await fetch(`${config.backendUrl}/api/rooms`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        await handleApiResponse(response);
         const rooms = await response.json();
         const roomsColumn = document.querySelector('.rooms-column');
         const scheduleCells = document.getElementById('scheduleCells');
@@ -67,15 +107,20 @@ async function loadRooms() {
                 for (let slot = 0; slot < 5; slot++) { // 5 timeslots
                     const cell = document.createElement('div');
                     cell.className = 'schedule-cell';
-                    cell.dataset.roomId = room.id;
+                    cell.dataset.roomId = room._id;
                     cell.dataset.day = day;
                     cell.dataset.slot = slot;
                     scheduleCells.appendChild(cell);
                 }
             }
         });
+
+        // Load initial schedule
+        window.scheduleManager.updateSchedule();
     } catch (error) {
-        console.error('Error loading rooms:', error);
+        if (error.message !== 'Session expired. Please login again.') {
+            console.error('Error loading rooms:', error);
+        }
     }
 }
 
