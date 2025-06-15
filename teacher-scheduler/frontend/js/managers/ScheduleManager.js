@@ -366,6 +366,7 @@ export default class ScheduleManager {
             
             // Add new schedule items
             schedules.forEach(schedule => {
+                if(!schedule.roomid) return;
                 const cell = document.querySelector(
                     `.schedule-cell[data-room-id="${schedule.roomid._id}"][data-day="${schedule.day}"][data-slot="${this.getSlotFromTime(schedule.start)}"]`
                 );
@@ -373,7 +374,8 @@ export default class ScheduleManager {
                 if (cell) {
                     const scheduleItem = document.createElement('div');
                     scheduleItem.className = 'schedule-item';
-                    scheduleItem.dataset.teacherId = schedule.teacherid;
+                    scheduleItem.dataset.teacherId = schedule.teacherid._id;
+                    scheduleItem.dataset.scheduleId = schedule._id;
                     
                     // Get module and teacher info
                     const module = this.modules.find(m => m._id === schedule.moduleid._id);
@@ -399,6 +401,17 @@ export default class ScheduleManager {
                             `Section ${section.number} - Group ${group.name}` : 
                             `Section ${section.number}`;
                         scheduleItem.title = `${module.name}\nTeacher: ${teacher.firstName} ${teacher.lastName}\nType: ${sessionType}\n${groupInfo}\nTime: ${schedule.start} - ${schedule.end}`;
+
+                        // Add delete button
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.className = 'schedule-delete-btn';
+                        deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        deleteBtn.title = 'Delete Schedule';
+                        deleteBtn.addEventListener('click', (e) => {
+                            e.stopPropagation(); // Prevent cell click event
+                            this.deleteSchedule(schedule._id);
+                        });
+                        scheduleItem.appendChild(deleteBtn);
                     } else {
                         scheduleItem.textContent = 'Schedule Item';
                     }
@@ -408,6 +421,31 @@ export default class ScheduleManager {
             });
         } catch (error) {
             console.error('Error updating schedule:', error);
+        }
+    }
+
+    async deleteSchedule(scheduleId) {
+        if (!confirm('Are you sure you want to delete this schedule?')) {
+            return;
+        }
+
+        try {
+            const response = await fetch(`${config.backendUrl}/api/schedules/${scheduleId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete schedule');
+            }
+
+            // Update the UI
+            this.updateSchedule();
+        } catch (error) {
+            console.error('Error deleting schedule:', error);
+            alert('Failed to delete schedule');
         }
     }
 
