@@ -124,6 +124,8 @@
     display: none;
     padding: 0 20px 20px;
     background: #f8f9fa;
+    max-height: none;
+    overflow: visible;
 }
 
 .accordion-item.active .accordion-content {
@@ -137,7 +139,7 @@
     margin-top: 10px;
     background: white;
     border-radius: 4px;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .affectations-table th,
