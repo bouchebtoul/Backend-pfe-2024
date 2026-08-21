@@ -33,7 +33,6 @@ const scheduleRoutes = require("./routes/scheduleRoutes");
 const teacherRoutes = require("./routes/teacherRoutes");
 const authRoutes = require("./routes/authRoutes");
 const roleRoutes = require("./routes/roleRoutes");
-const roomRoutes = require("./routes/roomRoutes");
 
 // Use routes
 app.use("/api/semesters", semesterRoutes);
@@ -47,7 +46,6 @@ app.use("/api/schedules", scheduleRoutes);
 app.use("/api/teachers", teacherRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api", roleRoutes);
-app.use("/api/rooms", roomRoutes);
 
 
 const PORT = process.env.PORT || 5000;
