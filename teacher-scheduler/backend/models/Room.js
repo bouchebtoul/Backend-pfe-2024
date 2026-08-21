@@ -3,10 +3,10 @@ const mongoose = require("mongoose");
 const RoomSchema = new mongoose.Schema({
   roomNumber: { type: String, required: true, unique: true },
   capacity: { type: Number, required: true },
-  type: { 
-    type: String, 
+  type: {
+    type: [String],
     required: true,
-    enum: ['CLASSROOM', 'LAB', 'AMPHITHEATER']
+    enum: ['LECTURE', 'TUTORIAL', 'WORKSHOP']
   }
 });
 

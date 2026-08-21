@@ -87,3 +87,5 @@ teacher-scheduler/backend/.temp/
 *.bak
 *.swp
 *~ 
+teacher-scheduler/backend/.env
+teacher-scheduler/backend/tokens.log

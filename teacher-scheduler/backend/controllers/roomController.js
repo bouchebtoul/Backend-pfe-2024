@@ -11,6 +11,10 @@ exports.getRooms = async (req, res) => {
 
 exports.addRoom = async (req, res) => {
   try {
+    // Ensure type is always an array
+    if (typeof req.body.type === 'string') {
+      req.body.type = [req.body.type];
+    }
     const room = await Room.create(req.body);
     res.status(201).json(room);
   } catch (error) {
@@ -20,6 +24,10 @@ exports.addRoom = async (req, res) => {
 
 exports.updateRoom = async (req, res) => {
   try {
+    // Ensure type is always an array
+    if (typeof req.body.type === 'string') {
+      req.body.type = [req.body.type];
+    }
     const room = await Room.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!room) {
       return res.status(404).json({ message: "Room not found" });

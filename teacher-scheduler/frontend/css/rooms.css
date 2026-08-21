@@ -143,7 +143,9 @@
     border-radius: 4px;
     box-sizing: border-box;
 }
-
+.form-group input[type="checkbox"]{
+    width: 50px;
+}
 .form-group input:focus,
 .form-group select:focus {
     border-color: #007bff;

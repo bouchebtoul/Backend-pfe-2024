@@ -28,11 +28,24 @@ class RoomsManager {
 
     renderRoomsTable() {
         const tableBody = document.getElementById('roomsTableBody');
+        const typePriority = { LECTURE: 0, TUTORIAL: 1, WORKSHOP: 2 };
+        this.rooms.sort((a, b) => {
+            const aType = Array.isArray(a.type) ? Math.min(...a.type.map(t => typePriority[t] ?? 99)) : (typePriority[a.type] ?? 99);
+            const bType = Array.isArray(b.type) ? Math.min(...b.type.map(t => typePriority[t] ?? 99)) : (typePriority[b.type] ?? 99);
+            if (aType !== bType) return aType - bType;
+            if (a.roomNumber && b.roomNumber) {
+                const aNum = parseInt(a.roomNumber, 10);
+                const bNum = parseInt(b.roomNumber, 10);
+                if (!isNaN(aNum) && !isNaN(bNum)) return aNum - bNum;
+                return a.roomNumber.localeCompare(b.roomNumber);
+            }
+            return 0;
+        });
         tableBody.innerHTML = this.rooms.map(room => `
             <tr>
                 <td>${room.roomNumber}</td>
                 <td>${room.capacity}</td>
-                <td>${this.formatRoomType(room.type)}</td>
+                <td>${Array.isArray(room.type) ? room.type.map(this.formatRoomType).join(', ') : this.formatRoomType(room.type)}</td>
                 <td>
                     <button class="btn-edit" data-id="${room._id}">
                         <i class="fas fa-edit"></i>
@@ -46,7 +59,9 @@ class RoomsManager {
     }
 
     formatRoomType(type) {
-        return type.charAt(0) + type.slice(1).toLowerCase();
+        if (!type) return '';
+        const map = { LECTURE: 'Lecture', TUTORIAL: 'Tutorial', WORKSHOP: 'Workshop' };
+        return map[type] || type;
     }
 
     setupEventListeners() {
@@ -103,12 +118,16 @@ class RoomsManager {
     }
 
     async saveRoom() {
+        const checkedTypes = Array.from(document.querySelectorAll('#roomTypeCheckboxes input[name="type"]:checked')).map(cb => cb.value);
         const formData = {
             roomNumber: document.getElementById('roomNumber').value,
             capacity: parseInt(document.getElementById('capacity').value),
-            type: document.getElementById('type').value
+            type: checkedTypes
         };
-
+        if (!formData.type.length) {
+            alert('Please select at least one room type.');
+            return;
+        }
         try {
             const url = 'http://localhost:5000/api/rooms' + (this.currentRoom ? `/${this.currentRoom._id}` : '');
             const response = await fetch(url, {
@@ -119,7 +138,6 @@ class RoomsManager {
                 },
                 body: JSON.stringify(formData)
             });
-
             if (response.ok) {
                 await this.loadRooms();
                 this.hideModal();
@@ -136,11 +154,15 @@ class RoomsManager {
     async editRoom(roomId) {
         this.currentRoom = this.rooms.find(r => r._id === roomId);
         if (!this.currentRoom) return;
-
         document.getElementById('roomNumber').value = this.currentRoom.roomNumber;
         document.getElementById('capacity').value = this.currentRoom.capacity;
-        document.getElementById('type').value = this.currentRoom.type;
-
+        // Uncheck all first
+        document.querySelectorAll('#roomTypeCheckboxes input[name="type"]').forEach(cb => cb.checked = false);
+        // Check those that match
+        (Array.isArray(this.currentRoom.type) ? this.currentRoom.type : [this.currentRoom.type]).forEach(type => {
+            const cb = document.querySelector(`#roomTypeCheckboxes input[name="type"][value="${type}"]`);
+            if (cb) cb.checked = true;
+        });
         document.getElementById('roomModalTitle').textContent = 'Edit Room';
         this.showModal();
     }

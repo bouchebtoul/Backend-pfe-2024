@@ -41,13 +41,12 @@
             </div>
             
             <div class="form-group">
-                <label for="type">Room Type</label>
-                <select id="type" name="type" required>
-                    <option value="">Select Room Type</option>
-                    <option value="CLASSROOM">Classroom</option>
-                    <option value="LAB">Laboratory</option>
-                    <option value="AMPHITHEATER">Amphitheater</option>
-                </select>
+                <label>Room Type</label>
+                <div id="roomTypeCheckboxes">
+                    <label><input type="checkbox" name="type" value="LECTURE"> Lecture</label>
+                    <label><input type="checkbox" name="type" value="TUTORIAL"> Tutorial</label>
+                    <label><input type="checkbox" name="type" value="WORKSHOP"> Workshop</label>
+                </div>
             </div>
             
             <button type="submit" class="submit-button">Save Room</button>
