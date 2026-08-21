@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Teacher Scheduler</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background: #f0f2f5;
+        }
+
+        .top-nav {
+            background: #fff;
+            padding: 0.5rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-section img {
+            height: 40px;
+        }
+
+        .university-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #1a73e8;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .user-profile:hover {
+            background: #f0f2f5;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #fff;
+            box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 60px;
+            left: 0;
+            height: calc(100vh - 60px);
+            padding: 1rem 0;
+            overflow-y: auto;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #333;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            margin-top: 60px;
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .content-section {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="top-nav">
+        <div class="logo-section">
+            <img src="../assets/university-logo.png" alt="University Logo" onerror="this.src='https://via.placeholder.com/40x40'">
+            <span class="university-name">University Name</span>
+        </div>
+        <div class="user-section">
+            <div class="user-profile" id="userInfo">
+                <i class="fas fa-user-circle"></i>
+                <span>Admin Name</span>
+            </div>
+            <button class="logout-btn" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <a href="#teachers" class="sidebar-link active">
+            <i class="fas fa-chalkboard-teacher"></i>
+            <span>Teachers</span>
+        </a>
+        <a href="#academic-structure" class="sidebar-link">
+            <i class="fas fa-university"></i>
+            <span>Academic Structure</span>
+        </a>
+        <a href="#modules" class="sidebar-link">
+            <i class="fas fa-book"></i>
+            <span>Modules/Courses</span>
+        </a>
+        <a href="#rooms" class="sidebar-link">
+            <i class="fas fa-door-open"></i>
+            <span>Rooms</span>
+        </a>
+        <a href="#affectations" class="sidebar-link">
+            <i class="fas fa-user-check"></i>
+            <span>Teacher Affectations</span>
+        </a>
+        <a href="#semesters" class="sidebar-link">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Semesters</span>
+        </a>
+        <a href="#academic-year" class="sidebar-link">
+            <i class="fas fa-graduation-cap"></i>
+            <span>Academic Year</span>
+        </a>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <div id="content-area">
+            <!-- Content will be loaded here dynamically -->
+            <div class="content-section" id="teachers-section">
+                <h2>Teachers Management</h2>
+                <div id="teachersList"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>
